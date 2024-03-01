@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "741749289086",
+    "project_id": "arkansas-2309b",
+    "storage_bucket": "arkansas-2309b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:741749289086:android:1869f40f325ab8c247e82f",
+        "android_client_info": {
+          "package_name": "com.arkansas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCU2mXzvcwEg1-Sa8wIYnvzWqn38GaQG9U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,17 @@
+{
+    "plugins": [
+      ["module-resolver", {
+        "root": ["./"],
+        "alias": {
+          "screens": "./src/screens",
+          "components":"./src/components",
+          "global":"./src/global",
+          "assets":"./src/assets",
+          "navigation":"./src/navigation",
+          "modals":"./src/modals",
+          "webapi":"./src/webapi/webapi",
+          "reduxToolkit":"./src/reduxToolkit"
+        }
+      }]
+    ]
+  }
