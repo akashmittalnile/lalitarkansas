@@ -22,6 +22,7 @@ import {
 import MyHeader from 'components/MyHeader/MyHeader';
 import MyText from 'components/MyText/MyText';
 import CustomLoader from 'components/CustomLoader/CustomLoader';
+import { shareItemHandler } from '../../../global/globalMethod';
 //import : third parties
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-toast-message';
@@ -290,6 +291,9 @@ const OrderDetails = ({ navigation, dispatch, route }) => {
                 letterSpacing={0.14}
                 style={{}}
               />
+               <TouchableOpacity onPress={() => {
+                  shareItemHandler(item?.type, item?.id);
+                }}>
               <View style={styles.iconsRow}>
                 {/* <Image source={require('assets/images/heart-selected.png')} /> */}
                 <Image
@@ -297,6 +301,7 @@ const OrderDetails = ({ navigation, dispatch, route }) => {
                   style={{ marginLeft: 10 }}
                 />
               </View>
+              </TouchableOpacity>
             </View>
             {item?.type == '1' ? (
               <MyButton
@@ -338,7 +343,7 @@ const OrderDetails = ({ navigation, dispatch, route }) => {
             style={{}}
           />
           <MyText
-            text={'$' + orderData?.data?.sub_total}
+            text={orderData?.data?.sub_total != undefined ? '$'+ orderData?.data?.sub_total : '0'}
             fontSize={14}
             fontFamily="medium"
             textColor={'#455A64'}
@@ -425,14 +430,25 @@ const OrderDetails = ({ navigation, dispatch, route }) => {
             fontFamily="medium"
             textColor={'#455A64'}
             style={{}}
-          />
-          <MyText
+          />{
+            orderData?.shipping_address?.first_name && orderData?.shipping_address?.last_name != undefined ?
+            <MyText
             text={orderData?.shipping_address?.first_name + "  " + orderData?.shipping_address?.last_name}
             fontSize={14}
             fontFamily="medium"
             textColor={'#455A64'}
             style={{}}
           />
+          :
+          <MyText
+          text={"not available"}
+          fontSize={14}
+          fontFamily="medium"
+          textColor={'#455A64'}
+          style={{}}
+        />
+          }
+         
         </View>
         {orderData?.data?.order_for === 2 && <View style={[styles.row, { marginBottom: 10 }]}>
           <MyText
@@ -442,13 +458,25 @@ const OrderDetails = ({ navigation, dispatch, route }) => {
             textColor={'#8F93A0'}
             style={{}}
           />
-          <MyText
+          {
+            orderData?.shipping_address?.email != undefined ?
+            <MyText
             text={orderData?.shipping_address?.email}
             fontSize={14}
             fontFamily="medium"
             textColor={'#8F93A0'}
             style={{}}
           />
+          :
+          <MyText
+          text={"not available"}
+          fontSize={14}
+          fontFamily="medium"
+          textColor={'#8F93A0'}
+          style={{}}
+        />
+          }
+         
         </View>}
         <View style={[styles.row, { marginBottom: 7 }]}>
           <MyText
@@ -458,13 +486,24 @@ const OrderDetails = ({ navigation, dispatch, route }) => {
             textColor={'#8F93A0'}
             style={{}}
           />
-          <MyText
+          {
+            orderData?.shipping_address?.phone != undefined ? 
+            <MyText
             text={orderData?.shipping_address?.phone}
             fontSize={14}
             fontFamily="medium"
             textColor={'#8F93A0'}
             style={{}}
-          />
+          />:
+          <MyText
+          text={"not available"}
+          fontSize={14}
+          fontFamily="medium"
+          textColor={'#8F93A0'}
+          style={{}}
+        />
+          }
+           
         </View>
         <View style={[styles.row, { marginBottom: 19 }]}>
           <MyText
@@ -474,13 +513,25 @@ const OrderDetails = ({ navigation, dispatch, route }) => {
             textColor={'#8F93A0'}
             style={{}}
           />
-          <MyText
-            text={orderData?.shipping_address?.address_line_1 + ", " + orderData?.shipping_address?.city + ", " + orderData?.shipping_address?.state + ", " + orderData?.shipping_address?.country}
+           {
+            orderData?.shipping_address?.address_line_1 != undefined ? 
+            <MyText
+            text={orderData?.shipping_address?.address_line_1 + ", " + orderData?.shipping_address?.city + ", " + orderData?.shipping_address?.state + ", " + orderData?.shipping_address?.country }
             fontSize={14}
             fontFamily="medium"
             textColor={'#8F93A0'}
             style={{}}
           />
+          :
+          <MyText
+          text={'not available'}
+          fontSize={14}
+          fontFamily="medium"
+          textColor={'#8F93A0'}
+          style={{}}
+        />
+           }
+         
         </View>
         {/* <Divider style={{ borderColor: '#E0E0E0' }} />
         <View style={[styles.row, { marginTop: 14 }]}>
@@ -593,15 +644,18 @@ const OrderDetails = ({ navigation, dispatch, route }) => {
                   fontFamily="regular"
                   fontSize={14}
                   textColor={Colors.WHITE}
+                  textAlign={'center'}
                   style={{}}
                 />
+              
                 <MyText
-                  text={'$' + orderData?.data?.total_amount_paid}
+                  text={orderData?.data?.total_amount_paid != undefined ? "$" + `${orderData?.data?.total_amount_paid}` : "0"}
                   fontFamily="bold"
                   fontSize={16}
                   textColor={Colors.WHITE}
                   style={{ marginTop: 5 }}
                 />
+             
               </View>
             </ImageBackground>
           </View>
@@ -621,7 +675,7 @@ const OrderDetails = ({ navigation, dispatch, route }) => {
               <View style={{ marginLeft: 12 }}>
                 <MyText
                   text={
-                    '**** **** **** ' + orderData?.data?.transaction?.card_no
+                    '**** **** **** ' + orderData?.data?.transaction?.card_no != undefined ? orderData?.data?.transaction?.card_no : ""
                   }
                   // text={'**** **** **** '}
                   fontSize={16}
@@ -629,7 +683,7 @@ const OrderDetails = ({ navigation, dispatch, route }) => {
                   textColor={'#261313'}
                 />
                 <MyText
-                  text={`Expires ${orderData?.data?.transaction?.expiry}`}
+                  text={`Expires ${orderData?.data?.transaction?.expiry != undefined ? orderData?.data?.transaction?.expiry : ""}`}
                   fontSize={14}
                   fontFamily="light"
                   textColor={Colors.LIGHT_GREY}

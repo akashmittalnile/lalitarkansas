@@ -55,7 +55,7 @@ import Product from '../../../components/Product/Product';
 import FastImage from 'react-native-fast-image';
 
 const addToCartObject = {};
-const Home = ({ navigation, dispatch }) => {
+const Home = ({props, navigation, dispatch }) => {
   const defaultImgPath = Image.resolveAssetSource(defaultImg).uri;
   //variables
   const LINE_HEIGTH = 25;
@@ -150,7 +150,7 @@ const Home = ({ navigation, dispatch }) => {
     setShowLoader2(true);
     try {
       const resp = await Service.getApiWithToken(userToken, Service.CART_COUNT);
-      console.log('getCartCount resp', resp?.data);
+      // console.log('getCartCount resp', resp?.data);
       if (resp?.data?.status) {
         dispatch(setCartCount(resp?.data?.data));
         await AsyncStorage.setItem(
@@ -397,7 +397,7 @@ const Home = ({ navigation, dispatch }) => {
     setShowSpecialLoader(false);
   };
   const renderTrendingFooter = () => {
-    console.log('renderTrendingFooter');
+    // console.log('renderTrendingFooter');
     return showTrendingLoader ? (
       <View style={{ flex: 1, justifyContent: 'center' }} >
         <ActivityIndicator size="large" color={Colors.THEME_GOLD} />
@@ -405,7 +405,7 @@ const Home = ({ navigation, dispatch }) => {
     ) : null;
   };
   const renderSpecialFooter = () => {
-    console.log('renderTrendingFooter');
+    // console.log('renderSpecialFooter');
     return showSpecialLoader ? (
       <View style={{ flex: 1, justifyContent: 'center' }} >
         <ActivityIndicator size="large" color={Colors.THEME_GOLD} />
@@ -607,6 +607,7 @@ const Home = ({ navigation, dispatch }) => {
   //   );
   // };
   const renderCourse = ({ item }) => {
+   
     return (
       <TouchableOpacity
         onPress={() => gotoCourseDetails(item?.id, '1')}
@@ -783,7 +784,7 @@ const Home = ({ navigation, dispatch }) => {
     await shareItemHandler(1, id);
   };
 
-  console.log({ userToken }, "home screen chal gyi")
+  // console.log({ userToken }, "home screen chal gyi")
   //UI
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -808,8 +809,9 @@ const Home = ({ navigation, dispatch }) => {
           // onMomentumScrollEnd={() => {
           //   setscrolling(false);
           // }}
+          alwaysBounceVertical
           onScroll={handleScroll}
-          scrollEventThrottle={16}
+          scrollEventThrottle={0}
           style={styles.mainView}>
           {!scrolling ? (
             <SearchWithIconDummy
@@ -828,6 +830,7 @@ const Home = ({ navigation, dispatch }) => {
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderTags}
           />
+         
           {homeData?.trending_course?.length > 0 ? (
             <View>
               <ViewAll
@@ -912,16 +915,18 @@ const Home = ({ navigation, dispatch }) => {
               style={{ textAlign: 'center', marginTop: 20 }}
             />
           )}
+         
           {showModal.isVisible ? (
-            <VideoModal
+           <VideoModal
               isVisible={showModal.isVisible}
               toggleModal={toggleModal}
               videoDetail={{
                 ...showModal?.data,
                 url: showModal?.data?.introduction_video,
               }}
-            // {...props}
+            {...props}
             />
+           
           ) : null}
           {/* {homeData?.suggested_course?.length > 0 ? (
             <View>

@@ -33,14 +33,14 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'white',
     marginRight: 16,
-    shadowColor: '#000',
+    // shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 3,
     },
-    shadowRadius: 5,
+    shadowRadius: 10,
     shadowOpacity: 0.05,
-    elevation: 2,
+    elevation: 3,
   },
   topRow: {
     flexDirection: 'row',

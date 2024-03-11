@@ -195,7 +195,8 @@ const Profile = ({ navigation, dispatch }) => {
   const getProfileData = async (id = '1') => {
     const endPoint = getEndpoint(id);
     console.log('endPoint', endPoint);
-    !showLoader && setShowLoader(true);
+    // !showLoader && 
+    setShowLoader(true);
     try {
       const resp = await Service.getApiWithToken(userToken, endPoint);
       console.log('getProfileData resp', resp?.data);
@@ -218,6 +219,7 @@ const Profile = ({ navigation, dispatch }) => {
     setShowLoader(false);
   };
   const downloadCertificate = async (link, title) => {
+    
     let pdfUrl = link;
     let DownloadDir =
       Platform.OS == 'ios'
@@ -251,7 +253,7 @@ const Profile = ({ navigation, dispatch }) => {
         notification: true,
         path: `${DownloadDir}/.pdf`,
         description: 'Arkansas',
-        title: `${productDetails?.title} course certificate.pdf`,
+        title: `${title} course certificate.pdf`,
         mime: 'application/pdf',
         mediaScannable: true,
       },
@@ -285,6 +287,7 @@ const Profile = ({ navigation, dispatch }) => {
   const setCertificatesTabData = async data => {
     const thumbData = await generateThumb(data);
     setCertificateData([...thumbData]);
+     
   };
   const setNotificationsTabData = data => { };
   const setBillingTabData = data => {
@@ -399,6 +402,7 @@ const Profile = ({ navigation, dispatch }) => {
   const generateThumb = async data => {
     console.log('generateThumb', JSON.stringify(data));
     let updatedData = [...data];
+    
     try {
       updatedData = await Promise.all(
         data?.map?.(async el => {
@@ -699,13 +703,15 @@ const Profile = ({ navigation, dispatch }) => {
                 onChangePassword={onChangePassword}
               />
             ) : selectedTab == '3' ? (
-              <CertificateTab
+               
+            <CertificateTab
                 certificateList={certificateData}
                 downloadCertificate={downloadCertificate}
                 openInBrowser={openInBrowser}
                 setShowViewPdfModal={setShowViewPdfModal}
                 setPdfLink={setPdfLink}
                 setPdfTitle={setPdfTitle}
+                 
               />
             ) : // : selectedTab == '4' ? (
               //   <NotificationsTab
@@ -726,6 +732,7 @@ const Profile = ({ navigation, dispatch }) => {
                 // viewDetails={viewDetails}
                 />
               ) : null}
+              
           </ScrollView>
         </KeyboardAvoidingView>
         <CustomLoader showLoader={showLoader} />

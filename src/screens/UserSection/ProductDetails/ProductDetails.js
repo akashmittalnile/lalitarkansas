@@ -404,6 +404,15 @@ const ProductDetails = ({ navigation, dispatch, route }) => {
           }
           style={styles.mainView}>
           {typeof productDetails === 'object' ? (
+             <View
+             style={{
+               overflow: 'hidden',
+               width: '100%',
+               alignSelf: 'center',
+               zIndex: -999,
+               borderRadius: 20,
+             }}>
+              {
             sliderData?.length > 0 ? (
               <ImageSlider
                 data={sliderData}
@@ -411,17 +420,19 @@ const ProductDetails = ({ navigation, dispatch, route }) => {
                 closeIconColor="#ED1C24"
                 // onItemChanged={handleItemChanged}
                 activeIndicatorStyle={{ backgroundColor: Colors.THEME_GOLD }}
-                inActiveIndicatorStyle={{ backgroundColor: '#fff' }}
+                inActiveIndicatorStyle={{ backgroundColor: '#fff', }}
+                indicatorContainerStyle={{top: -5}}
                 caroselImageStyle={{
-                  resizeMode: 'contain',
+                  resizeMode: 'stretch',
                   // height: '100%',
-                  width: width - 40,
+                  width: width *0.98 ,
                   height: height * 0.30,
                   borderRadius: 20
                 }}
               />
-            ) : null
-          ) : null}
+            ) : null}
+            </View>  
+          ) : null} 
           {/* {typeof productDetails === 'object' ? (
             sliderData?.length > 0 ? (
               <Carousel data={sliderData} />

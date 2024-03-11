@@ -201,6 +201,7 @@ const AddAddress = () => {
     const result = await getApiWithToken(userToken, `${Service.ADDRESS_DETAILS}/${address_id}`);
     const shippingAddressParams = result?.data?.data;
     const billingAddressParams = result?.data?.billing;
+    console.log("ADDRESS_DETAILS...",result?.data);
     if (shippingAddressParams) {
       dispatchShippingAddressDetails({
         payload: {

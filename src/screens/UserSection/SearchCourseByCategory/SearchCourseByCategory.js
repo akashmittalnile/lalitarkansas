@@ -155,7 +155,7 @@ const SearchCourseByCategory = ({navigation, dispatch, route}) => {
   };
   const ShowSelectedFilters = () => {
     return (
-      <View>
+      <View style={{flexWrap:'wrap', flexDirection: 'row',paddingVertical:10}}>
         {selectedPriceFilter !== '' ? (
           <View
             style={{
@@ -392,7 +392,7 @@ const SearchCourseByCategory = ({navigation, dispatch, route}) => {
     await getCourses();
   };
   const removeFilter = async (filterType, item) => {
-    const remainingPriceFilter = '';
+    // const remainingPriceFilter = '';
     if (filterType === 'price') {
       setTempSelectedPriceFilter('');
       setSelectedPriceFilter('');
@@ -410,7 +410,7 @@ const SearchCourseByCategory = ({navigation, dispatch, route}) => {
     const postData = new FormData();
     postData.append('type', 1);
     postData.append('category[]', route?.params?.id);
-    if (remainingPriceFilter !== '') {
+    if (tempSelectedPriceFilter !== '') {
       postData.append('price', tempSelectedPriceFilter);
     }
     if (remainingselectedRatingValues?.length > 0) {
@@ -563,7 +563,7 @@ const SearchCourseByCategory = ({navigation, dispatch, route}) => {
     <SafeAreaView style={{flex: 1}}>
       <StatusBar backgroundColor={Colors.THEME_BROWN} />
       <View style={styles.container}>
-        <MyHeader Title="Search Courses" isBackButton />
+        <MyHeader Title="Search Course2" isBackButton />
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingBottom: '20%'}}
@@ -599,7 +599,7 @@ const SearchCourseByCategory = ({navigation, dispatch, route}) => {
           <ShowSelectedFilters />
           <FlatList
             data={courseData}
-            style={{marginTop: 28}}
+            style={{marginTop: 10}}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderCourse}
             ListEmptyComponent={() => (

@@ -102,13 +102,16 @@ useEffect(() => {
   };
   //function : navigation function
   const gotoLogin = () => {
-    navigation.dispatch(resetIndexGoToLogin);
+    // navigation.dispatch(resetIndexGoToLogin);
+    navigation.navigate(ScreenNames.LOGIN);
+    setShowSuccessModal(false);
   };
   const resetIndexGoToLogin = CommonActions.reset({
     index: 1,
     routes: [{name: ScreenNames.LOGIN}],
   });
   const Validation = () => {
+    console.log("phone,,,,,",phone.trim().length)
     if (filePath == '') {
       Toast.show({text1: 'Please upload Profile Image'});
       return;
@@ -126,7 +129,10 @@ useEffect(() => {
       return false;
     } else if (phone == '') {
       Toast.show({text1: 'Please enter Phone Number'});
-      return false;
+      return false
+    }else if (phone.trim().length < 10) {
+      Toast.show({text1: 'Please valid Phone Number'});
+      return false ;
     } else if (password == '') {
       Toast.show({text1: 'Please enter Password'});
       return false;
@@ -137,42 +143,42 @@ useEffect(() => {
     if (!Validation()) {
       return;
     }
-    setShowLoader(true);
-    try {
-      const formaData = new FormData();
-      // const isRegistered=await messaging().isDeviceRegisteredForRemoteMessages()
-      // console.log(isRegistered);
-      // const token = await messaging().getToken();
-      // console.log("TOKEN",token);
-      const imageName = filePath?.uri?.slice(
-        filePath?.uri?.lastIndexOf('/'),
-        filePath?.uri?.length,
-      );
-      formaData.append('profile_image', {
-        name: imageName,
-        type: filePath?.type,
-        uri: filePath?.uri,
-      });
-      formaData.append('first_name', firstName);
-      formaData.append('last_name', lastName);
-      formaData.append('email', email);
-      formaData.append('phone', phone);
-      formaData.append('password', password);
-      formaData.append('fcm_token', 'jklmhfbfjhdsfjkfgg');
-      formaData.append('role', '1');
-      console.log('signUpUser formaData', formaData);
-      const resp = await Service.postApi(Service.REGISTER, formaData);
-      console.log('signUpUser resp', resp?.data);
-      if (resp?.data?.status) {
-        Toast.show({text1: resp.data.message});
-        openSuccessModal();
-      } else {
-        Toast.show({text1: resp.data.message});
-      }
-    } catch (error) {
-      console.log('error in signUpUser', error);
-    }
-    setShowLoader(false);
+    // setShowLoader(true);
+    // try {
+    //   const formaData = new FormData();
+    //   // const isRegistered=await messaging().isDeviceRegisteredForRemoteMessages()
+    //   // console.log(isRegistered);
+    //   // const token = await messaging().getToken();
+    //   // console.log("TOKEN",token);
+    //   const imageName = filePath?.uri?.slice(
+    //     filePath?.uri?.lastIndexOf('/'),
+    //     filePath?.uri?.length,
+    //   );
+    //   formaData.append('profile_image', {
+    //     name: imageName,
+    //     type: filePath?.type,
+    //     uri: filePath?.uri,
+    //   });
+    //   formaData.append('first_name', firstName);
+    //   formaData.append('last_name', lastName);
+    //   formaData.append('email', email);
+    //   formaData.append('phone', phone);
+    //   formaData.append('password', password);
+    //   formaData.append('fcm_token', 'jklmhfbfjhdsfjkfgg');
+    //   formaData.append('role', '1');
+    //   console.log('signUpUser formaData', formaData);
+    //   const resp = await Service.postApi(Service.REGISTER, formaData);
+    //   console.log('signUpUser resp', resp?.data);
+    //   if (resp?.data?.status) {
+    //     Toast.show({text1: resp.data.message});
+    //     openSuccessModal();
+    //   } else {
+    //     Toast.show({text1: resp.data.message});
+    //   }
+    // } catch (error) {
+    //   console.log('error in signUpUser', error);
+    // }
+    // setShowLoader(false);
   };
   //function : imp function
   const openCamera = () => {

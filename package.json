@@ -7,7 +7,13 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "androidRelease": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res --verbose",
+    "androidReleasewihoutverbose": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
+    "removeAndroidDrwable": "rm -rf ./android/app/src/main/res/drawable-*",
+    "removeAndroidRaw": "rm -rf ./android/app/src/main/res/raw",
+    "testingbuildandroid": "./gradlew assembleRelease",
+    "testingbuildDebugandroid": "./gradlew assembleDebug"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.19.0",
@@ -36,6 +42,7 @@
     "react-native-gesture-handler": "^2.14.0",
     "react-native-image-picker": "^7.0.1",
     "react-native-image-slider-banner": "^1.0.3",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-linear-gradient": "^2.7.3",
     "react-native-modal": "^13.0.1",
     "react-native-orientation-locker": "^1.5.0",

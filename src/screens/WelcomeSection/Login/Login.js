@@ -19,6 +19,7 @@ import { CommonActions } from '@react-navigation/native';
 import MyText from 'components/MyText/MyText';
 //third parties
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from '@react-navigation/native';
 //redux
 import { useDispatch } from 'react-redux';
 import {
@@ -50,7 +51,7 @@ const Login = ({ navigation }) => {
   const dispatch = useDispatch();
   const phoneRef = useRef(null);
   const passwordRef = useRef(null);
-
+  const isFocused = useIsFocused();
   const checkToken = async () => {
     try {
       const token = await messaging().getToken();
@@ -67,7 +68,9 @@ const Login = ({ navigation }) => {
   //useEffect
   useEffect(() => {
     checkToken();
-  }, []);
+    setEmail('');
+    setPassword('');
+  }, [isFocused]);
   //function : navigation function
   const gotoSignUp = () => {
     navigation.navigate(ScreenNames.SIGN_UP);

@@ -71,7 +71,7 @@ const Cart = ({ navigation, dispatch }) => {
   useEffect(() => {
     getCartList();
     // showAllAddressHandler();
-  }, [focused, coupon.applied]);
+  }, [coupon?.applied]);
   const checkcon = () => {
     getCartList();
   };
@@ -216,7 +216,7 @@ const Cart = ({ navigation, dispatch }) => {
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar backgroundColor={Colors.THEME_BROWN} />
       <View style={styles.container}>
-        <MyHeader Title="Cart" isBackButton />
+        <MyHeader Title="Cart" isBackButton  IsCartIcon={false}/>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: '20%', }}

@@ -171,7 +171,7 @@ const AllReviews = ({navigation, dispatch, route}) => {
               rating={reviewList?.avg_rating > 0 ? reviewList?.avg_rating : 0}
               reviews={reviewList?.review_list?.length}
               showButton={false}
-              style={{marginBottom: 17}}
+              style={{marginBottom: 17,}}
             />
           ) : null}
           {reviewList?.review_list?.length > 0 ? (
@@ -208,8 +208,8 @@ const AllReviews = ({navigation, dispatch, route}) => {
                   <Image
                     source={require('assets/images/star.png')
                     }
-                    resizeMode='cover'
-                    style={{ height: responsiveHeight(2), width: responsiveHeight(2)}}
+                    resizeMode='contain'
+                    style={{ height: responsiveHeight(2), width: responsiveHeight(2),marginLeft:7}}
                   />
                 </View>
                 <MyText

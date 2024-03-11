@@ -601,7 +601,7 @@ const AccordionItem = ({
                 Platform.OS === 'ios' ? {paddingTop: 16} : null,
               ]}>
               <MyButton
-                text="Mark as Complete"
+                text="Mark as completed"
                 onPress={() => markAsCompleted(item.id)}
                 style={[
                   {

@@ -22,6 +22,7 @@ import MyText from 'components/MyText/MyText';
 import CustomLoader from 'components/CustomLoader/CustomLoader';
 //import : third parties
 import LinearGradient from 'react-native-linear-gradient';
+import { useIsFocused } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 //import : global
 import {Colors, Constant, MyIcon, ScreenNames, Service} from 'global/Index';
@@ -46,9 +47,18 @@ const TopCategory = ({navigation, dispatch, route}) => {
   const [categoriesData, setCategoriesData] = useState([]);
   const [filteredcategoryData, setFilteredcategoryData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const focused = useIsFocused();
+
   useEffect(() => {
     getCategories();
   }, []);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      setSearchValue('')
+     
+    });
+    return unsubscribe;
+  }, [navigation, focused]);
   const checkcon = () => {
     getCategories();
   };
