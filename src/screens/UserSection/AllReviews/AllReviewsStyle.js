@@ -28,6 +28,7 @@ export const styles = StyleSheet.create({
   ratingView: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop:5
   },
   reviewContainer: {
     padding: 10,

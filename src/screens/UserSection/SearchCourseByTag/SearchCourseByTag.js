@@ -163,7 +163,7 @@ const SearchCourseByTag = ({navigation, dispatch, route}) => {
   };
   const ShowSelectedFilters = () => {
     return (
-      <View>
+      <View style={{flexWrap:'wrap', flexDirection: 'row',paddingVertical:10}}>
         {selectedCourseCategries?.length > 0 ? (
           <View
             style={{
@@ -321,6 +321,8 @@ const SearchCourseByTag = ({navigation, dispatch, route}) => {
     setSelectedRatingValues(tempSelectedRatingValues);
   };
   const applyFilters = async (searchParam = '') => {
+    console.log("apply filter 1")
+    setShowLoader(true);
     setOriginalValues();
     const postData = new FormData();
     postData.append('type', 1);
@@ -363,13 +365,13 @@ const SearchCourseByTag = ({navigation, dispatch, route}) => {
         }
       }
     }
-
+    postData.append('limit', 10);
     console.log('applyFilters postData', JSON.stringify(postData));
-    setShowLoader(true);
+    // setShowLoader(true);
     try {
       const resp = await Service.postApiWithToken(
         userToken,
-        Service.ALL_TYPE_LISTING,
+        Service.TRENDING_COURSE,
         postData,
       );
       console.log('applyFilters resp', resp?.data);
@@ -378,13 +380,78 @@ const SearchCourseByTag = ({navigation, dispatch, route}) => {
         const updatedData = await generateThumb(resp?.data?.data);
         setCourseData(updatedData);
       } else {
-        Toast.show({text1: resp.data.message});
+        Toast.show({ text1: resp.data.message });
       }
     } catch (error) {
       console.log('error in applyFilters', error);
     }
     setShowLoader(false);
   };
+  // const applyFilters = async (searchParam = '') => {
+  //   setOriginalValues();
+  //   const postData = new FormData();
+  //   postData.append('type', 1);
+  //   postData.append('tag', route?.params?.id);
+  //   let catIds = [];
+  //   catIds = courseCategries
+  //     ?.filter(el => tempSelectedCourseCategries?.includes(el?.name))
+  //     ?.map(el => el?.id);
+  //   if (catIds?.length > 0) {
+  //     catIds?.map(el => postData.append('category[]', el));
+  //   }
+  //   if (tempSelectedPriceFilter !== '') {
+  //     postData.append('price', tempSelectedPriceFilter);
+  //   }
+  //   if (tempSelectedRatingValues?.length > 0) {
+  //     tempSelectedRatingValues?.map(el => postData.append('rating[]', el));
+  //   }
+  //   const isSearchTermExists = searchParam?.toString()?.trim()?.length > 0;
+  //   const isSearchValueExists = searchValue?.toString()?.trim()?.length > 0;
+  //   console.log(
+  //     'isSearchTermExists, isSearchValueExists',
+  //     isSearchTermExists,
+  //     isSearchValueExists,
+  //   );
+  //   console.log('searchTerm', searchParam);
+  //   console.log('searchValue', searchValue);
+  //   if (isSearchTermExists || isSearchValueExists) {
+  //     // handling special case: while deleting last character of search, since search state would not update fast, so using searchParam instead of search state (searchValue)
+  //     if (
+  //       searchValue?.toString()?.trim()?.length === 1 &&
+  //       searchParam?.toString()?.trim()?.length === 0
+  //     ) {
+  //       postData.append('title', searchParam?.toString()?.trim());
+  //     } else {
+  //       // preferring to check searchParam first, because it has the most recent search value fast. But it is not always passed, in else case using searchValue
+  //       if (isSearchTermExists) {
+  //         postData.append('title', searchParam?.toString()?.trim());
+  //       } else {
+  //         postData.append('title', searchValue?.toString()?.trim());
+  //       }
+  //     }
+  //   }
+
+  //   console.log('applyFilters postData', JSON.stringify(postData));
+  //   setShowLoader(true);
+  //   try {
+  //     const resp = await Service.postApiWithToken(
+  //       userToken,
+  //       Service.ALL_TYPE_LISTING,
+  //       postData,
+  //     );
+  //     console.log('applyFilters resp', resp?.data);
+  //     if (resp?.data?.status) {
+  //       setShowFilterModal(false);
+  //       const updatedData = await generateThumb(resp?.data?.data);
+  //       setCourseData(updatedData);
+  //     } else {
+  //       Toast.show({text1: resp.data.message});
+  //     }
+  //   } catch (error) {
+  //     console.log('error in applyFilters', error);
+  //   }
+  //   setShowLoader(false);
+  // };
   const applyFilters2 = async (searchParam = '') => {
     const isDeletingLastCharacterInSearch =
       searchValue?.toString()?.trim()?.length === 1 &&
@@ -485,7 +552,7 @@ const SearchCourseByTag = ({navigation, dispatch, route}) => {
     const postData = new FormData();
     postData.append('type', 1);
     postData.append('tag', route?.params?.id);
-    if (remainingPriceFilter !== '') {
+    if (tempSelectedPriceFilter !== '') {
       postData.append('price', tempSelectedPriceFilter);
     }
     if (remainingselectedRatingValues?.length > 0) {
@@ -680,7 +747,7 @@ const SearchCourseByTag = ({navigation, dispatch, route}) => {
           <ShowSelectedFilters />
           <FlatList
             data={courseData}
-            style={{marginTop: 28}}
+            style={{marginTop: 10}}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderCourse}
             ListEmptyComponent={() => (

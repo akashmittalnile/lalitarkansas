@@ -91,7 +91,7 @@ const Item = ({ item, type = 1, onChangeQuantity = () => { }, coupon = { applied
                 }
                 await getCartCount();
                 // Toast.show({ text1: "resp?.data?.message" });
-                // onChangeQuantity();
+                onChangeQuantity();
             } else {
                 Toast.show({ text1: resp?.data?.message });
             }

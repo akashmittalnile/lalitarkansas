@@ -285,7 +285,7 @@ const SearchProductByTag = ({navigation, dispatch, route}) => {
       setSelectedProductCategries([...remainingSelectedCategories]);
       setTempSelectedProductCategries([...remainingSelectedCategories]);
     }
-    const remainingPriceFilter = '';
+    // const remainingPriceFilter = '';
     if (filterType === 'price') {
       setTempSelectedPriceFilter('');
       setSelectedPriceFilter('');
@@ -310,7 +310,7 @@ const SearchProductByTag = ({navigation, dispatch, route}) => {
     if (catIds?.length > 0) {
       catIds?.map(el => postData.append('category[]', el));
     }
-    if (remainingPriceFilter !== '') {
+    if (tempSelectedPriceFilter !== '') {
       postData.append('price', tempSelectedPriceFilter);
     }
     if (remainingselectedRatingValues?.length > 0) {
@@ -457,10 +457,11 @@ const SearchProductByTag = ({navigation, dispatch, route}) => {
   };
   const ShowSelectedFilters = () => {
     return (
-      <ScrollView
-        showsVerticalScrollIndicator={true}
-        nestedScrollEnabled={true}
-        contentContainerStyle={{marginTop: 10}}>
+      // <ScrollView
+      //   showsVerticalScrollIndicator={true}
+      //   nestedScrollEnabled={true}
+      //   contentContainerStyle={{marginTop: 10}}>
+      <View style={{flexWrap:'wrap', flexDirection: 'row',paddingVertical:10}}>
         {selectedProductCategries?.length > 0 ? (
           <View
             style={{
@@ -472,6 +473,7 @@ const SearchProductByTag = ({navigation, dispatch, route}) => {
               paddingHorizontal: 10,
               paddingVertical: 5,
               borderRadius: 10,
+              marginTop: 10,
             }}>
             <MyText
               text={'Categorie(s): '}
@@ -597,7 +599,8 @@ const SearchProductByTag = ({navigation, dispatch, route}) => {
             ))}
           </View>
         ) : null}
-      </ScrollView>
+        </View>
+      // </ScrollView>
     );
   };
   //UI
@@ -631,7 +634,7 @@ const SearchProductByTag = ({navigation, dispatch, route}) => {
           {productData?.length > 0 ? (
             <FlatList
               data={productData || []}
-              style={{marginTop: 28}}
+              style={{marginTop: 10}}
               keyExtractor={(item, index) => index.toString()}
               renderItem={renderProduct}
             />

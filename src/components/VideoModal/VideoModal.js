@@ -12,7 +12,10 @@
  import VideoPlayer from 'react-native-video-controls';
  import Orientation from 'react-native-orientation-locker';
  import Modal from 'react-native-modal';
- const VideoModal = props => {
+ const VideoModal = (props) => {
+console.log('====================================');
+console.log(props?.videoDetail?.file);
+console.log('====================================');
    const [screenState, setScreenState] = useState({
      fullScreen: false,
      Width_Layout: '',
@@ -62,7 +65,7 @@
        <TouchableOpacity
          style={styles.ModalOutsideContainer}
          onPress={() =>
-           props.toggleModal({
+           props?.toggleModal({
              isVisible: false,
              data: null,
            })
@@ -88,10 +91,10 @@
      return (
        <VideoPlayer
          source={{
-           uri: props.videoDetail.file,
+           uri: props?.videoDetail?.file,
          }}
          onBack={() =>
-           props.toggleModal({
+           props?.toggleModal({
              isVisible: false,
              data: null,
            })

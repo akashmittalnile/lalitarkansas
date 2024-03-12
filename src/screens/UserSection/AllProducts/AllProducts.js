@@ -275,15 +275,17 @@ const AllProducts = ({ navigation, dispatch }) => {
     await getAllType();
   };
   const removeFilter = async (filterType, item) => {
-    let remainingSelectedCategories = [...TempSelectedProductCategries];
+ 
+    let remainingSelectedCategories = selectedProductCategries;
+    // let remainingSelectedCategories = [...TempSelectedProductCategries];
     if (filterType === 'cat') {
-      remainingSelectedCategories = TempSelectedProductCategries?.filter(
+      remainingSelectedCategories = selectedProductCategries?.filter(
         el => el !== item,
       );
       setSelectedProductCategries([...remainingSelectedCategories]);
       setTempSelectedProductCategries([...remainingSelectedCategories]);
     }
-    const remainingPriceFilter = '';
+    // const remainingPriceFilter = '';
     if (filterType === 'price') {
       setTempSelectedPriceFilter('');
       setSelectedPriceFilter('');
@@ -307,13 +309,13 @@ const AllProducts = ({ navigation, dispatch }) => {
     if (catIds?.length > 0) {
       catIds?.map(el => postData.append('category[]', el));
     }
-    if (remainingPriceFilter !== '') {
+    if (tempSelectedPriceFilter !== '') {
       postData.append('price', tempSelectedPriceFilter);
     }
     if (remainingselectedRatingValues?.length > 0) {
       remainingselectedRatingValues?.map(el => postData.append('rating[]', el));
     }
-    console.log('removeFilter postData', JSON.stringify(postData));
+    console.log('removeFilter postData Allproducts', JSON.stringify(postData));
     setShowLoader(true);
     try {
       const resp = await Service.postApiWithToken(
@@ -470,6 +472,7 @@ const AllProducts = ({ navigation, dispatch }) => {
       <ScrollView
         showsVerticalScrollIndicator={true}
         nestedScrollEnabled={true}>
+          <View style={{flexWrap:'wrap', flexDirection: 'row',paddingVertical:5}}>
         {selectedProductCategries?.length > 0 ? (
           <View
             style={{
@@ -481,6 +484,7 @@ const AllProducts = ({ navigation, dispatch }) => {
               paddingHorizontal: 10,
               paddingVertical: 5,
               borderRadius: 10,
+              marginTop: 10,
             }}>
             <MyText
               text={'Categorie(s): '}
@@ -606,6 +610,7 @@ const AllProducts = ({ navigation, dispatch }) => {
             ))}
           </View>
         ) : null}
+        </View>
       </ScrollView>
     );
   };
@@ -618,6 +623,7 @@ const AllProducts = ({ navigation, dispatch }) => {
       <StatusBar backgroundColor={Colors.THEME_BROWN} />
       <View style={styles.container}>
         <MyHeader Title="All Products" isBackButton />
+        
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: '20%' }}
@@ -643,7 +649,7 @@ const AllProducts = ({ navigation, dispatch }) => {
           {productData?.length > 0 ? (
             <FlatList
               data={productData || []}
-              style={{ marginTop: 28 }}
+              style={{ marginTop: 10 }}
               keyExtractor={(item, index) => index.toString()}
               renderItem={renderProduct}
             />

@@ -409,7 +409,7 @@ const SuggestedProducts = ({ navigation, dispatch }) => {
       setSelectedProductCategries([...remainingSelectedCategories]);
       setTempSelectedProductCategries([...remainingSelectedCategories]);
     }
-    const remainingPriceFilter = '';
+    // const remainingPriceFilter = '';
     if (filterType === 'price') {
       setTempSelectedPriceFilter('');
       setSelectedPriceFilter('');
@@ -433,7 +433,7 @@ const SuggestedProducts = ({ navigation, dispatch }) => {
     if (catIds?.length > 0) {
       catIds?.map(el => postData.append('category[]', el));
     }
-    if (remainingPriceFilter !== '') {
+    if (tempSelectedPriceFilter !== '') {
       postData.append('price', tempSelectedPriceFilter);
     }
     if (remainingselectedRatingValues?.length > 0) {
@@ -471,9 +471,10 @@ const SuggestedProducts = ({ navigation, dispatch }) => {
   };
   const ShowSelectedFilters = () => {
     return (
-      <ScrollView
-        showsVerticalScrollIndicator={true}
-        nestedScrollEnabled={true}>
+      // <ScrollView
+      //   showsVerticalScrollIndicator={true}
+      //   nestedScrollEnabled={true}>
+          <View style={{flexWrap:'wrap', flexDirection: 'row',paddingVertical:10}}>
         {selectedProductCategries?.length > 0 ? (
           <View
             style={{
@@ -485,6 +486,7 @@ const SuggestedProducts = ({ navigation, dispatch }) => {
               paddingHorizontal: 10,
               paddingVertical: 5,
               borderRadius: 10,
+              marginTop: 10,
             }}>
             <MyText
               text={'Categorie(s): '}
@@ -610,7 +612,8 @@ const SuggestedProducts = ({ navigation, dispatch }) => {
             ))}
           </View>
         ) : null}
-      </ScrollView>
+        </View>
+      //  </ScrollView>
     );
   };
   //UI
@@ -644,7 +647,7 @@ const SuggestedProducts = ({ navigation, dispatch }) => {
           {productData?.length > 0 ? (
             <FlatList
               data={productData || []}
-              style={{ marginTop: 28 }}
+              style={{ marginTop: 10 }}
               keyExtractor={(item, index) => index.toString()}
               renderItem={renderProduct}
             />

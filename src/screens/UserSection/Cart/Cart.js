@@ -71,7 +71,7 @@ const Cart = ({ navigation, dispatch }) => {
   useEffect(() => {
     getCartList();
     // showAllAddressHandler();
-  }, [focused, coupon.applied]);
+  }, [coupon?.applied]);
   const checkcon = () => {
     getCartList();
   };
@@ -205,7 +205,8 @@ const Cart = ({ navigation, dispatch }) => {
     }
   };
 
-  const renderItem = ({ item }) => <Item item={item} type={cartListData.type} onChangeQuantity={getCartList} coupon={coupon} shownShippingBtn={cartListData.type === 1 ? true : false} disabledBtn={cartListData.type === 2 ? false : true} shippingBtn={() => { modalHandler(item.product_id); }} shippingDetails={allAppliedCoupons} />;
+  const renderItem = ({ item }) => <Item item={item} type={cartListData.type} onChangeQuantity={()=>{
+    getCartList()}} coupon={coupon} shownShippingBtn={cartListData.type === 1 ? true : false} disabledBtn={cartListData.type === 2 ? false : true} shippingBtn={() => { modalHandler(item.product_id); }} shippingDetails={allAppliedCoupons} />;
 
   const showAllAddress = () => {
     navigation.navigate(ScreenNames.ADDRESSESS);
@@ -216,7 +217,7 @@ const Cart = ({ navigation, dispatch }) => {
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar backgroundColor={Colors.THEME_BROWN} />
       <View style={styles.container}>
-        <MyHeader Title="Cart" isBackButton />
+        <MyHeader Title="Cart" isBackButton  IsCartIcon={false}/>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: '20%', }}

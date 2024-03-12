@@ -17,7 +17,7 @@ class NotificationManager {
             importance: 4, // (optional) default: 4. Int value of the Android notification importance
             vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
           },
-          created => console.log(`channel created '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+          created => console.debug(`channel created '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
         );
       }
     });
@@ -27,7 +27,7 @@ class NotificationManager {
     PushNotification.configure({
       // (optional) Called when Token is generated (iOS and Android)
       onRegister: function (param) {
-        console.log('TOKEN:', param.token);
+        console.debug('TOKEN:', param.token);
       },
 
       // (required) Called when a remote is received or opened, or local notification is opened

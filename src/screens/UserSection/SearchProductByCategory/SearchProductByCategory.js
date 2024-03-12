@@ -124,7 +124,7 @@ const SearchProductByCategory = ({navigation, dispatch, route}) => {
   };
   const ShowSelectedFilters = () => {
     return (
-      <View>
+      <View style={{flexWrap:'wrap', flexDirection: 'row',paddingVertical:10}}>
         {selectedPriceFilter !== '' ? (
           <View
             style={{
@@ -359,7 +359,7 @@ const SearchProductByCategory = ({navigation, dispatch, route}) => {
     await getCourses();
   };
   const removeFilter = async (filterType, item) => {
-    const remainingPriceFilter = '';
+    // const remainingPriceFilter = '';
     if (filterType === 'price') {
       setTempSelectedPriceFilter('');
       setSelectedPriceFilter('');
@@ -377,7 +377,7 @@ const SearchProductByCategory = ({navigation, dispatch, route}) => {
     const postData = new FormData();
     postData.append('type', 2);
     postData.append('category[]', route?.params?.id);
-    if (remainingPriceFilter !== '') {
+    if (tempSelectedPriceFilter !== '') {
       postData.append('price', tempSelectedPriceFilter);
     }
     if (remainingselectedRatingValues?.length > 0) {
@@ -548,7 +548,7 @@ const SearchProductByCategory = ({navigation, dispatch, route}) => {
           <ShowSelectedFilters />
           <FlatList
             data={productData}
-            style={{marginTop: 28}}
+            style={{marginTop: 10}}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderProduct}
             ListEmptyComponent={() => (

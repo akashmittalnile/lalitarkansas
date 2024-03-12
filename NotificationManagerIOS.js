@@ -6,7 +6,7 @@ class NotificationManager extends React.Component {
   configure = () => {
     PushNotification.configure({
       onRegister: function (param) {
-        console.log('TOKEN:', param.token);
+        console.debug('TOKEN:', param.token);
       },
       onNotification: function (notification) {
         notification.finish(PushNotificationIOS.FetchResult.NoData);

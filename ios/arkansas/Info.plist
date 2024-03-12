@@ -46,8 +46,18 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow Arkansas to access your photos. Capture/Choose a picture and set as profile image</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Arkansas wants to access your location for creating  and tracking an order.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Arkansas wants to access your location for creating  and tracking an order.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Arkansas wants to access your location for creating  and tracking an order.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Allow Arkansas to access your photos. Capture/Choose a picture and set as profile image</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow Arkansas to access your photos. Capture/Choose a picture and set as profile image</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>LeagueSpartan-Black.ttf</string>

@@ -21,6 +21,7 @@ import Toast from 'react-native-toast-message';
 import CustomLoader from '../../../components/CustomLoader/CustomLoader';
 import MyHeader from '../../../components/MyHeader/MyHeader';
 import { getApiWithToken, postApiWithToken } from '../../../global/Service';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const shippingAddressDetailsReducer = (state, action) => {
   if (action.type === 'first_name') {
@@ -201,6 +202,7 @@ const AddAddress = () => {
     const result = await getApiWithToken(userToken, `${Service.ADDRESS_DETAILS}/${address_id}`);
     const shippingAddressParams = result?.data?.data;
     const billingAddressParams = result?.data?.billing;
+    console.log("ADDRESS_DETAILS...",result?.data);
     if (shippingAddressParams) {
       dispatchShippingAddressDetails({
         payload: {
@@ -569,16 +571,10 @@ const AddAddress = () => {
 
   console.log({ isClicked });
   return (
-    <>
+    <View style={styles.container}>
       <MyHeader isBackButton={true} IsCartIcon={false} style={{ height: hg(13) }} />
-      <View style={styles.container}>
-        {/* <View style={{ width: wd(100), backgroundColor: Colors.THEME_BROWN, height: hg(10), paddingTop: hg(1.5) }}>
-          <View style={{ width: wd(15) }}>
-            <BackBtn arrowColor="white" />
-          </View>
-        </View> */}
+        <KeyboardAwareScrollView style={styles.container}>
         <View style={styles.subContainer}>
-          <ScrollView contentContainerStyle={{ paddingBottom: hg(20) }} showsVerticalScrollIndicator={false}>
             <MyText text="Shipping Address" marginBottom={hg(1.5)} fontSize={20} />
             <MyTextInput placeholder="First Name" onChangeText={onChangeFirstName} value={shippingAddressDetails.first_name} isOnChangeText={true} style={{ borderColor: 'red', borderWidth: shippingAddressErr.first_name ? 1 : 0 }} />
             <MyTextInput placeholder="Middle Name (Optional)" onChangeText={onChangeMiddleName} value={shippingAddressDetails.middle_name} isOnChangeText={true} />
@@ -650,18 +646,10 @@ const AddAddress = () => {
             <View style={styles.saveAddress}>
               <MyButton text='Save Address' onPress={addAddressHandler} />
             </View>
-            {/* <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: hg(2) }}>
-            <View>
-              <Text style={{ color: 'black' }}>Don't have an account ? </Text>
-            </View>
-            <BorderLessBtn text='Sign Up' onPress={signupHandler} />
-          </View> */}
-
-          </ScrollView>
         </View>
-      </View>
+        </KeyboardAwareScrollView>
       {<CustomLoader showLoader={loader} />}
-    </>
+    </View>
   );
 };
 
@@ -670,15 +658,12 @@ export default AddAddress;
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    width: wd(100),
+    flex:1
   },
   subContainer: {
-    marginTop: hg(1),
-    width: wd(90),
+    padding:20
   },
   dropdownStyle: {
-    marginBottom: 15,
     flexDirection: 'row',
     alignItems: 'center',
     // justifyContent: 'space-between',

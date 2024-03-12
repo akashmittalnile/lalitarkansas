@@ -419,6 +419,9 @@ const SearchAllType = ({ navigation, dispatch }) => {
     await getAllType();
   };
   const removeFilter = async (filterType, item) => {
+    console.log('================removeFilter====================',item);
+    console.log(filterType);
+    console.log('===================removeFilter in Searchalltypes=================');
     let remainingSelectedCategories =
       selectedTab === '1'
         ? selectedCourseCategries
@@ -439,7 +442,7 @@ const SearchAllType = ({ navigation, dispatch }) => {
         setTempSelectedProductCategries([...remainingSelectedCategories]);
       }
     }
-    const remainingPriceFilter = '';
+    // const remainingPriceFilter = '';
     if (filterType === 'price') {
       setTempSelectedPriceFilter('');
       setSelectedPriceFilter('');
@@ -466,16 +469,18 @@ const SearchAllType = ({ navigation, dispatch }) => {
         ?.filter(el => remainingSelectedCategories?.includes(el?.name))
         ?.map(el => el?.id);
     }
+    console.log("catIdscatIds---SeachAllTypes",catIds);
     if (catIds?.length > 0) {
       catIds?.map(el => postData.append('category[]', el));
     }
-    if (remainingPriceFilter !== '') {
+    if (tempSelectedPriceFilter !== '') {
       postData.append('price', tempSelectedPriceFilter);
     }
     if (remainingselectedRatingValues?.length > 0) {
       remainingselectedRatingValues?.map(el => postData.append('rating[]', el));
     }
-    console.log('removeFilter postData', JSON.stringify(postData));
+    
+    console.log('removeFilter postData-Search-alltype', JSON.stringify(postData));
     setShowLoader(true);
     try {
       const resp = await Service.postApiWithToken(
@@ -726,7 +731,7 @@ const SearchAllType = ({ navigation, dispatch }) => {
   };
   const ShowSelectedFilters = () => {
     return (
-      <View>
+      <View style={{flexWrap:'wrap', flexDirection: 'row',paddingVertical:10}}>
         {showSelectedCategories() ? (
           <View
             style={{
@@ -966,7 +971,7 @@ const SearchAllType = ({ navigation, dispatch }) => {
                 <FlatList
                   // data={courseList}
                   data={courseData}
-                  style={{ marginTop: 28 }}
+                  style={{ marginTop: 10 }}
                   keyExtractor={(_, index) => index.toString()}
                   renderItem={renderCourse}
                 />
@@ -989,7 +994,7 @@ const SearchAllType = ({ navigation, dispatch }) => {
                 <FlatList
                   // data={productList}
                   data={productData}
-                  style={{ marginTop: 28 }}
+                  style={{ marginTop: 10 }}
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={renderProduct}
                 />

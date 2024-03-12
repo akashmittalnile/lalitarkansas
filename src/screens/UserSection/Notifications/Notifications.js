@@ -245,7 +245,7 @@ const Notifications = ({ navigation, dispatch }) => {
           textColor={Colors.LIGHT_GREY}
           fontSise={14}
           fontFamily="light"
-          style={{ position: 'absolute', right: 10, }}
+          style={{ position: 'absolute', right: 10,top:6 }}
         />
       </View>
     );

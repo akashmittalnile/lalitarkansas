@@ -22,6 +22,7 @@ import MyText from 'components/MyText/MyText';
 import CustomLoader from 'components/CustomLoader/CustomLoader';
 //import : third parties
 import LinearGradient from 'react-native-linear-gradient';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Toast from 'react-native-toast-message';
 //import : global
 import {Colors, Constant, MyIcon, ScreenNames, Service} from 'global/Index';
@@ -181,7 +182,7 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
   };
   const ShowSelectedFilters = () => {
     return (
-      <View>
+      <View style={{flexWrap:'wrap', flexDirection: 'row',paddingVertical:10}}>
         {selectedCourseCategries?.length > 0 ? (
           <View
             style={{
@@ -490,7 +491,7 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
       setSelectedCourseCategries([...remainingSelectedCategories]);
       setTempSelectedCourseCategries([...remainingSelectedCategories]);
     }
-    const remainingPriceFilter = '';
+    // const remainingPriceFilter = '';
     if (filterType === 'price') {
       setTempSelectedPriceFilter('');
       setSelectedPriceFilter('');
@@ -514,7 +515,7 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
     if (catIds?.length > 0) {
       catIds?.map(el => postData.append('category[]', el));
     }
-    if (remainingPriceFilter !== '') {
+    if (tempSelectedPriceFilter !== '') {
       postData.append('price', tempSelectedPriceFilter);
     }
     if (remainingselectedRatingValues?.length > 0) {
@@ -672,6 +673,8 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
       <StatusBar backgroundColor={Colors.THEME_BROWN} />
       <View style={styles.container}>
         <MyHeader Title="Arkansas Courses" isBackButton />
+        {/* <KeyboardAwareScrollView style={{padding:0}}> */}
+        <View style={{ flex: 1 }}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingBottom: '20%'}}
@@ -704,7 +707,7 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
           <ShowSelectedFilters />
           <FlatList
             data={courseData}
-            style={{marginTop: 28}}
+            style={{marginTop: 10}}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderCourse}
             ListEmptyComponent={() => (
@@ -721,6 +724,8 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
             )}
           />
         </ScrollView>
+        </View>
+        {/* </KeyboardAwareScrollView> */}
         <CustomLoader showLoader={showLoader || showLoader2} />
         <SAFiltersModal
           visible={showFilterModal}

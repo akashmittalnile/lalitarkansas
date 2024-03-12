@@ -79,9 +79,9 @@ const Review = ({
       coverScreen={false}
       backdropColor="transparent"
       style={styles.modal}>
-      {/* <KeyboardAvoidingView
-        style={{}}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}> */}
+      <KeyboardAvoidingView
+        style={styles.modal}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={styles.modalContent}>
         <MyText
           text="Review & Rating"
@@ -118,7 +118,7 @@ const Review = ({
           onPress={submitReview}
         />
       </View>
-      {/* </KeyboardAvoidingView> */}
+      </KeyboardAvoidingView>
     </Modal>
   );
 };

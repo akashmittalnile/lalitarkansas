@@ -394,7 +394,7 @@ const Wishlist = ({ navigation, dispatch }) => {
         setTempSelectedProductCategries([...remainingSelectedCategories]);
       }
     }
-    const remainingPriceFilter = '';
+    // const remainingPriceFilter = '';
     if (filterType === 'price') {
       setTempSelectedPriceFilter('');
       setSelectedPriceFilter('');
@@ -424,7 +424,7 @@ const Wishlist = ({ navigation, dispatch }) => {
     if (catIds?.length > 0) {
       catIds?.map(el => postData.append('category[]', el));
     }
-    if (remainingPriceFilter !== '') {
+    if (tempSelectedPriceFilter !== '') {
       postData.append('price', tempSelectedPriceFilter);
     }
     if (remainingselectedRatingValues?.length > 0) {
@@ -478,7 +478,7 @@ const Wishlist = ({ navigation, dispatch }) => {
   };
   const ShowSelectedFilters = () => {
     return (
-      <View>
+      <View style={{flexWrap:'wrap', flexDirection: 'row',paddingVertical:10}}>
         {showSelectedCategories() ? (
           <View
             style={{

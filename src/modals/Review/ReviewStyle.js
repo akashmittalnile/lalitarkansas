@@ -17,6 +17,7 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     padding: 20,
+    paddingBottom:"10%",
     // alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,

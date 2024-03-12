@@ -187,7 +187,7 @@ const SuggestedCourses = ({navigation, dispatch}) => {
   };
   const ShowSelectedFilters = () => {
     return (
-      <View>
+      <View style={{flexWrap:'wrap', flexDirection: 'row',paddingVertical:10}}>
         {selectedCourseCategries?.length > 0 ? (
           <View
             style={{
@@ -497,7 +497,7 @@ const SuggestedCourses = ({navigation, dispatch}) => {
       setSelectedCourseCategries([...remainingSelectedCategories]);
       setTempSelectedCourseCategries([...remainingSelectedCategories]);
     }
-    const remainingPriceFilter = '';
+    // const remainingPriceFilter = '';
     if (filterType === 'price') {
       setTempSelectedPriceFilter('');
       setSelectedPriceFilter('');
@@ -521,7 +521,7 @@ const SuggestedCourses = ({navigation, dispatch}) => {
     if (catIds?.length > 0) {
       catIds?.map(el => postData.append('category[]', el));
     }
-    if (remainingPriceFilter !== '') {
+    if (tempSelectedPriceFilter !== '') {
       postData.append('price', tempSelectedPriceFilter);
     }
     if (remainingselectedRatingValues?.length > 0) {
@@ -681,7 +681,7 @@ const SuggestedCourses = ({navigation, dispatch}) => {
           <ShowSelectedFilters />
           <FlatList
             data={courseData}
-            style={{marginTop: 28}}
+            style={{marginTop: 10}}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderCourse}
           />

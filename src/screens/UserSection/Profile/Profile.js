@@ -175,12 +175,16 @@ const Profile = ({ navigation, dispatch }) => {
       console.log('userToken', userToken);
       // setSelectedTab('1')
       getProfileData();
+      getProfileData('3');
+      
+
     });
     return unsubscribe;
   }, [navigation]);
   const checkcon = () => {
     setSelectedTab('1')
     getProfileData(selectedTab);
+  
   };
   const wait = timeout => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -195,7 +199,8 @@ const Profile = ({ navigation, dispatch }) => {
   const getProfileData = async (id = '1') => {
     const endPoint = getEndpoint(id);
     console.log('endPoint', endPoint);
-    !showLoader && setShowLoader(true);
+    // !showLoader && 
+    setShowLoader(true);
     try {
       const resp = await Service.getApiWithToken(userToken, endPoint);
       console.log('getProfileData resp', resp?.data);
@@ -203,7 +208,8 @@ const Profile = ({ navigation, dispatch }) => {
         if (id === '1') {
           setProfileTabData(resp?.data?.data);
         } else if (id === '3') {
-          setCertificatesTabData(resp?.data?.data);
+          const thumbData = await generateThumb(resp?.data?.data);
+          setCertificateData([...thumbData]);
         } else if (id === '4') {
           setNotificationsTabData(resp?.data?.data);
         } else if (id === '5') {
@@ -218,6 +224,7 @@ const Profile = ({ navigation, dispatch }) => {
     setShowLoader(false);
   };
   const downloadCertificate = async (link, title) => {
+    
     let pdfUrl = link;
     let DownloadDir =
       Platform.OS == 'ios'
@@ -251,7 +258,7 @@ const Profile = ({ navigation, dispatch }) => {
         notification: true,
         path: `${DownloadDir}/.pdf`,
         description: 'Arkansas',
-        title: `${productDetails?.title} course certificate.pdf`,
+        title: `${title} course certificate.pdf`,
         mime: 'application/pdf',
         mediaScannable: true,
       },
@@ -283,8 +290,10 @@ const Profile = ({ navigation, dispatch }) => {
     setPhone(data?.phone);
   };
   const setCertificatesTabData = async data => {
-    const thumbData = await generateThumb(data);
-    setCertificateData([...thumbData]);
+    setShowLoader(true)
+   
+    setShowLoader(false)
+     
   };
   const setNotificationsTabData = data => { };
   const setBillingTabData = data => {
@@ -399,6 +408,7 @@ const Profile = ({ navigation, dispatch }) => {
   const generateThumb = async data => {
     console.log('generateThumb', JSON.stringify(data));
     let updatedData = [...data];
+    
     try {
       updatedData = await Promise.all(
         data?.map?.(async el => {
@@ -699,13 +709,15 @@ const Profile = ({ navigation, dispatch }) => {
                 onChangePassword={onChangePassword}
               />
             ) : selectedTab == '3' ? (
-              <CertificateTab
+               
+            <CertificateTab
                 certificateList={certificateData}
                 downloadCertificate={downloadCertificate}
                 openInBrowser={openInBrowser}
                 setShowViewPdfModal={setShowViewPdfModal}
                 setPdfLink={setPdfLink}
                 setPdfTitle={setPdfTitle}
+                 
               />
             ) : // : selectedTab == '4' ? (
               //   <NotificationsTab
@@ -726,6 +738,7 @@ const Profile = ({ navigation, dispatch }) => {
                 // viewDetails={viewDetails}
                 />
               ) : null}
+              
           </ScrollView>
         </KeyboardAvoidingView>
         <CustomLoader showLoader={showLoader} />

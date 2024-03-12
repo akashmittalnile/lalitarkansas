@@ -40,6 +40,7 @@ const CertificateTab = ({
   setPdfLink,
   setPdfTitle,
 }) => {
+  console.warn("certificateList",certificateList);
   const defaultCreatorImgPath = Image.resolveAssetSource(defaultCreatorImg).uri;
   const renderCertificate = ({ item }) => {
     return (

@@ -266,7 +266,7 @@ const MyOrders = ({ navigation, dispatch }) => {
   };
   const ShowSelectedFilters = () => {
     return (
-      <View>
+      <View style={{flexWrap:'wrap', flexDirection: 'row',paddingVertical:10}}>
         {showSelectedCategories() ? (
           <View
             style={{
@@ -1088,7 +1088,7 @@ const MyOrders = ({ navigation, dispatch }) => {
                 <FlatList
                   data={courseData}
                   contentContainerStyle={{ paddingBottom: responsiveHeight(8) }}
-                  style={{ marginTop: 28 }}
+                  style={{ marginTop: 10 }}
                   keyExtractor={(_, index) => index.toString()}
                   renderItem={renderCourse}
                 />
@@ -1107,7 +1107,7 @@ const MyOrders = ({ navigation, dispatch }) => {
             ) : productData?.length > 0 ? (
               <FlatList
                 data={productData}
-                style={{ marginTop: 18 }}
+                style={{ marginTop: 10 }}
                 contentContainerStyle={{ paddingBottom: responsiveHeight(8) }}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={renderProduct}

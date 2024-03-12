@@ -57,6 +57,7 @@ export const ADD_NEW_ADDRESS = `address`;
 export const GET_ALL_ADDRESS = 'address';
 export const UPDATE_ADDRESS = 'update-address';
 export const DELETE_ADDRESS = 'address';
+export const ADDRESS_DETAILS = 'address-details';
 export const ALL_COUPON = 'coupons?type=2';
 export const COUPON_APPLIED = 'coupon-applied';
 export const REMOVE_APPLIED_COUPON = 'remove-applied-coupon';
@@ -70,6 +71,7 @@ export const REMOVE_APPLIED_COUPON_COURSE = 'remove-applied-coupon-course';
 //function : post API
 export const postAPI = async (endPoint, postData, token = '') => {
   const url = BASE_URL + endPoint;
+  console.log('POST URL', url);
   return await axios
     .post(url, postData, {
       headers: {
@@ -83,6 +85,7 @@ export const postAPI = async (endPoint, postData, token = '') => {
         response: response?.data,
         status: response?.data?.status,
         msg: response?.data?.msg,
+        
       };
     })
     .catch(error => {
@@ -96,6 +99,7 @@ export const postAPI = async (endPoint, postData, token = '') => {
 
 //function :  get api
 export const getApi = endPoint =>
+ 
   axios
     .get(`${BASE_URL}${endPoint}`)
     .then(res => {
@@ -141,6 +145,7 @@ export const getApiWithToken = (token, endPoint) =>
       },
     })
     .then(res => {
+      console.log('GET URL', `${BASE_URL}${endPoint}`);
       return res;
     })
     .catch(error => {
@@ -227,6 +232,7 @@ export const postApi = (endPoint, data) =>
 
 //function : post api with token
 export const postApiWithToken = (token, endPoint, data) =>
+  
   axios
     .post(`${BASE_URL}${endPoint}`, data, {
       headers:
@@ -243,6 +249,8 @@ export const postApiWithToken = (token, endPoint, data) =>
           },
     })
     .then(res => {
+      console.log('POST URL', `${BASE_URL}${endPoint}`);
+      console.log("DATA",data);
       return res;
     })
     .catch(error => {
@@ -276,6 +284,7 @@ export const postApiWithToken = (token, endPoint, data) =>
         console.log('error message', error.response.data.message);
       }
     });
+  
 //function : post api with json data
 export const postJsonApiWithToken = (token, endPoint, data) =>
   axios

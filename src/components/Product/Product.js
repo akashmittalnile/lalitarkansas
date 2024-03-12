@@ -97,7 +97,7 @@ const Product = ({ item, showLoader = null, setShowLoader = null, setShowCourseT
     return (
         <TouchableOpacity
             onPress={() => gotoProductDetails(item?.id, '2')}
-            style={[styles.productContainer, { height: responsiveHeight(38) }]}>
+            style={[styles.productContainer, { height: responsiveHeight(26) }]}>
             <View>
                 {item.Product_image[0] ? (
                     <Image
