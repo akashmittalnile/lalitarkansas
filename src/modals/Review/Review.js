@@ -29,8 +29,10 @@ const Review = ({
   review,
   setReview,
   submitReview,
-  isReviewed = false,
+  isReviewed = 'false' ,
+  
 }) => {
+  console.log(starRating,"star rating-  isReviewed------",isReviewed);
   //variables : navigation
   const navigation = useNavigation();
   //function : navigation function
@@ -59,7 +61,7 @@ const Review = ({
       </View>
     );
   };
-
+  
   //UI
   return (
     <Modal
@@ -79,9 +81,10 @@ const Review = ({
       coverScreen={false}
       backdropColor="transparent"
       style={styles.modal}>
-      {/* <KeyboardAvoidingView
-        style={{}}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}> */}
+      <KeyboardAvoidingView
+        // style={styles.modal}
+        // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
       <View style={styles.modalContent}>
         <MyText
           text="Review & Rating"
@@ -109,7 +112,7 @@ const Review = ({
           onChangeText={e => setReview(e)}
         />
         <MyButton
-          text={!isReviewed ? "Submit" : "Update"}
+          text={isReviewed == 'false' ? "Submit" : "Update"}
           style={{
             width: width * 0.9,
             marginBottom: 10,
@@ -118,7 +121,7 @@ const Review = ({
           onPress={submitReview}
         />
       </View>
-      {/* </KeyboardAvoidingView> */}
+      </KeyboardAvoidingView>
     </Modal>
   );
 };

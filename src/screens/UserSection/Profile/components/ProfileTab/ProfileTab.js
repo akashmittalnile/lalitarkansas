@@ -1,8 +1,7 @@
 //import : react components
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  View,
-  ScrollView,
+  View, 
   Switch,
   TouchableOpacity,
   Dimensions,
@@ -154,7 +153,7 @@ const ProfileTab = ({
         CountryCode={selectedCountry.dial_code}
         placeholder="Enter Phone Number"
         keyboardType="number-pad"
-        maxLength={10}
+        // maxLength={10}
         // onPress={() => setShow(true)}
         onChangeText={text => setPhone(text)}
         onSubmitEditing={() => Keyboard.dismiss()}

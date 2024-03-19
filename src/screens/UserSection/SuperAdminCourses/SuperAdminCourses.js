@@ -25,6 +25,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Toast from 'react-native-toast-message';
 //import : global
+import { shareItemHandler } from '../../../global/globalMethod';
 import {Colors, Constant, MyIcon, ScreenNames, Service} from 'global/Index';
 //import : styles
 import {styles} from './SuperAdminCoursesStyle';
@@ -77,7 +78,7 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
     getCategories();
   }, []);
   useEffect(() => {
-    const unsubscribe = navigation.addListener('blur', () => {
+    const unsubscribe = navigation.addListener('focus', () => {
       setSearchValue('')
       setSelectedCourseCategries([])
       setTempSelectedCourseCategries([])
@@ -85,6 +86,8 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
       setTempSelectedPriceFilter('')
       setSelectedRatingValues('')
       setTempSelectedRatingValues('')
+      getCourses();
+    // getCategories();
     });
     return unsubscribe;
   }, [navigation]);
@@ -111,10 +114,10 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
         Service.SPECIAL_COURSES,
         {},
       );
-      console.log('getCourses resp', resp?.data);
+      // console.log('getCourses resp', resp?.data);
       if (resp?.data?.status) {
-        const updatedData = await generateThumb(resp?.data?.data);
-        setCourseData([...updatedData]);
+        // const updatedData = await generateThumb(resp?.data?.data);
+        setCourseData([...resp?.data?.data]);
       } else {
         Toast.show({text1: resp.data.message});
       }
@@ -147,29 +150,29 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
   const gotoCourseDetails = (id, type) => {
     navigation.navigate(ScreenNames.COURSE_DETAILS, {id, type});
   };
-  const generateThumb = async data => {
-    // console.log('generateThumb');
-    let updatedData = [...data];
-    try {
-      updatedData = await Promise.all(
-        data?.map?.(async el => {
-          // console.log('el.introduction_video trending', el.introduction_video);
-          const thumb = await createThumbnail({
-            url: el.introduction_video,
-            timeStamp: 1000,
-          });
-          return {
-            ...el,
-            thumb,
-          };
-        }),
-      );
-    } catch (error) {
-      console.error('Error generating thumbnails:', error);
-    }
-    console.log('thumb data SearchAllType', updatedData);
-    return updatedData;
-  };
+  // const generateThumb = async data => {
+  //   // console.log('generateThumb');
+  //   let updatedData = [...data];
+  //   try {
+  //     updatedData = await Promise.all(
+  //       data?.map?.(async el => {
+  //         // console.log('el.introduction_video trending', el.introduction_video);
+  //         const thumb = await createThumbnail({
+  //           url: el.introduction_video,
+  //           timeStamp: 1000,
+  //         });
+  //         return {
+  //           ...el,
+  //           thumb,
+  //         };
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error('Error generating thumbnails:', error);
+  //   }
+  //   console.log('thumb data SearchAllType', updatedData);
+  //   return updatedData;
+  // };
   const isFilterApplied = () => {
     if (selectedCourseCategries?.length > 0) {
       return true;
@@ -392,8 +395,8 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
       console.log('applyFilters resp', resp?.data);
       if (resp?.data?.status) {
         setShowFilterModal(false);
-        const updatedData = await generateThumb(resp?.data?.data);
-        setCourseData(updatedData);
+        // const updatedData = await generateThumb(resp?.data?.data);
+        setCourseData(resp?.data?.data);
       } else {
         Toast.show({text1: resp.data.message});
       }
@@ -459,8 +462,8 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
       console.log('applyFilters resp', resp?.data);
       if (resp?.data?.status) {
         setShowFilterModal(false);
-        const updatedData = await generateThumb(resp?.data?.data);
-        setCourseData(updatedData);
+        // const updatedData = await generateThumb(resp?.data?.data);
+        setCourseData(resp?.data?.data);
       } else {
         Toast.show({text1: resp.data.message});
       }
@@ -532,8 +535,8 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
       console.log('removeFilter resp', resp?.data);
       if (resp?.data?.status) {
         setShowFilterModal(false);
-        const updatedData = await generateThumb(resp?.data?.data);
-        setCourseData(updatedData);
+        // const updatedData = await generateThumb(resp?.data?.data);
+        setCourseData(resp?.data?.data);
       } else {
         Toast.show({text1: resp.data.message});
       }
@@ -547,6 +550,7 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
   };
 
   const onLike = async (type, id, status) => {
+    // setCourseData([]);
     setShowLoader(true);
     const formdata = new FormData();
     formdata.append('type', type);
@@ -562,7 +566,8 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
       console.log('onLike resp', resp?.data);
       if (resp?.data?.status) {
         Toast.show({text1: resp.data.message});
-        getSuggestedCourses();
+       await getCourses();
+        // getCategories();
       } else {
         Toast.show({text1: resp.data.message});
       }
@@ -571,14 +576,16 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
     }
     setShowLoader(false);
   };
-
+  const shareHandler = async (type,id) => {
+    shareItemHandler(type,id);
+  };
   const renderCourse = ({item}) => {
     return (
       <TouchableOpacity
         onPress={() => gotoCourseDetails(item?.id, '1')}
         style={styles.courseContainer}>
         <ImageBackground
-          source={{uri: item?.thumb?.path}}
+          source={{uri: item?.thumbnail}}
           style={styles.crseImg}
           imageStyle={{borderRadius: 10}}>
           <TouchableOpacity onPress={() => {
@@ -600,7 +607,9 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
           />
           <View style={styles.middleRow}>
             <View style={styles.ratingRow}>
-              <Image source={require('assets/images/star.png')} />
+            <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
               <MyText
                 text={item?.avg_rating}
                 fontFamily="regular"
@@ -639,7 +648,7 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
               style={{}}
             />
             <View style={styles.iconsRow}>
-            <TouchableOpacity
+            <TouchableOpacity style={{height: 18, width: 18}}
                 onPress={() => {
                   onLike('1', item.id, item?.isWishlist);
                 }}>
@@ -647,14 +656,18 @@ const SuperAdminCourses = ({navigation, dispatch}) => {
                   source={
                     item?.isWishlist
                       ? require('assets/images/heart-selected.png')
-                      : require('assets/images/heart-yellow-outline.png')
+                      :
+                       require('assets/images/heart-yellow-outline.png')
                   }
+                  style={{ height: 18, width: 18 }}
                 />
               </TouchableOpacity>
+              <TouchableOpacity onPress={()=>{shareHandler('1',item.id)}}>
               <Image
                 source={require('assets/images/share.png')}
-                style={{marginLeft: 10}}
+                style={{marginLeft: 10,height: 18, width: 18 }}
               />
+              </TouchableOpacity>
             </View>
           </View>
         </View>

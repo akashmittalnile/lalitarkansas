@@ -1,8 +1,7 @@
 //import : react components
 import React, {useEffect, useRef, useState} from 'react';
 import {
-  View,
-  ScrollView,
+  View, 
   Switch,
   TouchableOpacity,
   Dimensions,

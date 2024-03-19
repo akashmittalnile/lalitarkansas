@@ -26,6 +26,7 @@ import MyTextInput from 'components/MyTextInput/MyTextInput';
 import Toast from 'react-native-toast-message';
 import CustomLoader from '../../../components/CustomLoader/CustomLoader';
 import { Service } from '../../../global/Index';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const ForgotPasswordEmail = ({navigation}) => {
   //variables : redux variables
@@ -63,7 +64,9 @@ const ForgotPasswordEmail = ({navigation}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <StatusBar backgroundColor={Colors.THEME_BROWN} />
+      
       <View style={styles.container}>
+      <KeyboardAwareScrollView>
         <ScrollView
           style={styles.mainView}
           showsVerticalScrollIndicator={false}
@@ -106,7 +109,9 @@ const ForgotPasswordEmail = ({navigation}) => {
             onPress={handleForgotPasswrord}
           />
         </ScrollView>
+        </KeyboardAwareScrollView>
       </View>
+      
       <CustomLoader showLoader={showLoader} />
     </SafeAreaView>
   );

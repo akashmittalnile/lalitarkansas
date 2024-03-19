@@ -2,7 +2,6 @@
 import React, {useEffect, useRef, useState, Platform} from 'react';
 import {
   View,
-  ScrollView,
   Switch,
   TouchableOpacity,
   Dimensions,

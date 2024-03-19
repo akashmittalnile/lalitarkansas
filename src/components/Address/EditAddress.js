@@ -22,6 +22,7 @@ const EditAddress = ({ address, deleteAddress, containerStyle = {}, billingAddre
     };
 
     const selectAddress = async () => {
+        console.log("Selected-Address-ID::",address?.id);
         if (isAddressSelected) {
             Toast.show({
                 type: 'info',

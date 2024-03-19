@@ -13,6 +13,7 @@ import {Colors} from 'global/Index';
 import MyText from 'components/MyText/MyText';
 import {styles} from './MyMultiSelectStyle';
 import {AntDesign} from 'global/MyIcon';
+import Toast from 'react-native-toast-message';
 
 import {MultiSelect} from 'react-native-element-dropdown';
 
@@ -49,7 +50,12 @@ const MyMultiSelect = ({value, setValue, data, placeholder, style = {}}) => {
       placeholder={placeholder}
       searchPlaceholder="Search..."
       value={value}
-      onFocus={() => setIsFocus(true)}
+      onFocus={() => {setIsFocus(true) ;
+        if(data?.length == 0){
+          Toast.show({ text1:"No orders found" });
+        }
+         
+        }}
       onBlur={() => setIsFocus(false)}
       onChange={item => {
         setValue(item);

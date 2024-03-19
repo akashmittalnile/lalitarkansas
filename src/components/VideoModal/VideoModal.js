@@ -13,9 +13,8 @@
  import Orientation from 'react-native-orientation-locker';
  import Modal from 'react-native-modal';
  const VideoModal = (props) => {
-console.log('====================================');
-console.log(props?.videoDetail?.file);
-console.log('====================================');
+console.log('=======================VideoModal=====props.isVisible========',props.isVisible);
+ 
    const [screenState, setScreenState] = useState({
      fullScreen: false,
      Width_Layout: '',
@@ -91,7 +90,7 @@ console.log('====================================');
      return (
        <VideoPlayer
          source={{
-           uri: props?.videoDetail?.file,
+           uri: props?.videoDetail?.introduction_video,
          }}
          onBack={() =>
            props?.toggleModal({
@@ -107,7 +106,7 @@ console.log('====================================');
        />
      );
    };
- console.log('shoaib video props', props)
+//  console.log('shoaib video props', props)
    return (
     <Modal
        animationType={'fade'}

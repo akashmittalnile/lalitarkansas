@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import { View, StyleSheet, ScrollView, Text, Image } from 'react-native';
+import { View, StyleSheet,  Text, Image } from 'react-native';
 import React, { useReducer, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
@@ -21,6 +21,8 @@ import Toast from 'react-native-toast-message';
 import CustomLoader from '../../../components/CustomLoader/CustomLoader';
 import MyHeader from '../../../components/MyHeader/MyHeader';
 import { getApiWithToken, postApiWithToken } from '../../../global/Service';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import MaskInput from 'react-native-mask-input';
 
 const shippingAddressDetailsReducer = (state, action) => {
   if (action.type === 'first_name') {
@@ -423,6 +425,7 @@ const AddAddress = () => {
       billing_country: false,
       billing_address_type: false,
     };
+    
     let billingValidation = false;
     if (!isClicked) {
       const { billing_first_name, billing_last_name, billing_phone, billing_email, billing_address_line_1, billing_city, billing_state, billing_zip_code, billing_country, billing_address_type } = billingAddressDetails;
@@ -466,6 +469,7 @@ const AddAddress = () => {
         }));
       }
     }
+  
 
     if (isClicked) {
       billingValidation = true;
@@ -512,16 +516,24 @@ const AddAddress = () => {
       ...err,
     }));
     return false;
+    
   };
-
+//Amit kumar 12 mar modify UI and functionality issues
   const addAddressHandler = async () => {
-    try {
+    // console.log("shippingAddressDetails.phone.trim().length",shippingAddressDetails.phone.trim().length);
+   try {
       setLoader(true);
       const validator = shippingAddressValidator();
       if (validator) {
-        if (route?.params?.address_id) {
+        if(shippingAddressDetails.phone.trim().length < 14){
+          Toast.show({
+            type: 'error',
+            text1: 'Please Enter Valid Phone Number',
+          });
+          return ; 
+        } else if (route?.params?.address_id) {
           const postData = { ...shippingAddressDetails, billing_checkbox: Number(isClicked), ...billingAddressDetails };
-          console.log({postData})
+          console.log("Address-postdata",{postData})
           const response = await Service.postJsonApiWithToken(userToken, Service.UPDATE_ADDRESS, postData);
           if (response.data.status) {
             Toast.show({
@@ -537,7 +549,7 @@ const AddAddress = () => {
             });
           }
         }
-        else {
+        else  {
           const response = await Service.postJsonApiWithToken(userToken, Service.ADD_NEW_ADDRESS, { ...shippingAddressDetails, address_line_1: '4009 Marathon Blvd', city: 'Austin', state: 'TX', country: 'US', zip_code: '78756', ...billingAddressDetails, billing_checkbox: Number(isClicked), billing_address_line_1: '4009 Marathon Blvd', billing_city: 'Austin', billing_state: 'TX', billing_country: 'US', billing_zip_code: '78756' });
           if (response.data.status) {
             Toast.show({
@@ -554,6 +566,7 @@ const AddAddress = () => {
           }
         }
       }
+     
       else if (!validator) {
         Toast.show({
           type: 'info',
@@ -561,6 +574,8 @@ const AddAddress = () => {
         });
         return;
       }
+    
+     
     } catch (err) {
       console.log('add new address err', err.message);
     } finally {
@@ -570,22 +585,70 @@ const AddAddress = () => {
 
   console.log({ isClicked });
   return (
-    <>
+    <View style={styles.container}>
       <MyHeader isBackButton={true} IsCartIcon={false} style={{ height: hg(13) }} />
-      <View style={styles.container}>
-        {/* <View style={{ width: wd(100), backgroundColor: Colors.THEME_BROWN, height: hg(10), paddingTop: hg(1.5) }}>
-          <View style={{ width: wd(15) }}>
-            <BackBtn arrowColor="white" />
-          </View>
-        </View> */}
+        <KeyboardAwareScrollView style={styles.container}>
         <View style={styles.subContainer}>
-          <ScrollView contentContainerStyle={{ paddingBottom: hg(20) }} showsVerticalScrollIndicator={false}>
             <MyText text="Shipping Address" marginBottom={hg(1.5)} fontSize={20} />
             <MyTextInput placeholder="First Name" onChangeText={onChangeFirstName} value={shippingAddressDetails.first_name} isOnChangeText={true} style={{ borderColor: 'red', borderWidth: shippingAddressErr.first_name ? 1 : 0 }} />
             <MyTextInput placeholder="Middle Name (Optional)" onChangeText={onChangeMiddleName} value={shippingAddressDetails.middle_name} isOnChangeText={true} />
             <MyTextInput placeholder="Last Name" onChangeText={onChangeLastName} value={shippingAddressDetails.last_name} isOnChangeText={true}
               style={{ borderColor: 'red', borderWidth: shippingAddressErr.last_name ? 1 : 0 }} />
-            <MyTextInput placeholder="Phone Number" onChangeText={onChangePhoneNumber} value={shippingAddressDetails.phone} isOnChangeText={true} keyboardType="numeric" maxLength={10} style={{ borderColor: 'red', borderWidth: shippingAddressErr.phone ? 1 : 0 }} />
+
+            {/* <MyTextInput placeholder="Phone Number" onChangeText={onChangePhoneNumber} value={shippingAddressDetails.phone} isOnChangeText={true} keyboardType="numeric" maxLength={10} style={{ borderColor: 'red', borderWidth: shippingAddressErr.phone ? 1 : 0 }} /> */}
+            <View style={{ marginBottom: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+        // justifyContent: 'space-between',
+        width: '100%',
+        borderRadius: 5,
+        backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 3,
+        },
+        shadowRadius: 5,
+        shadowOpacity: 0.05,
+        elevation: 2,
+        borderColor: 'red', borderWidth: shippingAddressErr.phone ? 1 : 0 }}>
+            <MaskInput
+              value={shippingAddressDetails.phone}
+              keyboardType="numeric"
+              placeholder="Phone Number"
+              placeholderTextColor={'#CECECE'}
+              style={{color: '#000', padding: 10,
+              paddingLeft: 20,
+              borderRadius: 5,
+              width: '72%',
+              height: 58,fontSize:14}}
+              onChangeText={(masked, unmasked) => {
+                onChangePhoneNumber(masked); // you can use the unmasked value as well
+
+                // assuming you typed "9" all the way:
+                console.log(masked); // (99) 99999-9999
+                console.log(unmasked); // 99999999999
+              }}
+              mask={[
+                '(',
+                /\d/,
+                /\d/,
+                /\d/,
+                ')',
+                ' ',
+                /\d/,
+                /\d/,
+                /\d/,
+                '-',
+                /\d/,
+                /\d/,
+                /\d/,
+                /\d/,
+              ]}
+            />
+            </View>
+            
+
             {/* <Dropdown placeholder="Phone Number" data={[1, 2, 3]} /> */}
             <MyTextInput placeholder="Email Address" onChangeText={onChangeEmail} value={shippingAddressDetails.email} isOnChangeText={true}
               style={{ borderColor: 'red', borderWidth: shippingAddressErr.email ? 1 : 0 }} />
@@ -624,7 +687,60 @@ const AddAddress = () => {
               <MyTextInput placeholder="First Name" onChangeText={onChangeBillingFirstName} value={billingAddressDetails.billing_first_name} isOnChangeText={true} style={{ borderColor: 'red', borderWidth: billingAddressErr.billing_first_name ? 1 : 0 }} />
               <MyTextInput placeholder="Middle Name (Optional)" onChangeText={onChangeBillingMiddleName} value={billingAddressDetails.billing_middle_name} isOnChangeText={true} />
               <MyTextInput placeholder="Last Name" onChangeText={onChangeBillingLastName} value={billingAddressDetails.billing_last_name} isOnChangeText={true} style={{ borderColor: 'red', borderWidth: billingAddressErr.billing_last_name ? 1 : 0 }} />
-              <MyTextInput placeholder="Phone Number" onChangeText={onChangeBillingPhoneNumber} value={billingAddressDetails.billing_phone} isOnChangeText={true} keyboardType="numeric" maxLength={10} style={{ borderColor: 'red', borderWidth: billingAddressErr.billing_phone ? 1 : 0 }} />
+
+              {/* <MyTextInput placeholder="Phone Number" onChangeText={onChangeBillingPhoneNumber} value={billingAddressDetails.billing_phone} isOnChangeText={true} keyboardType="numeric" maxLength={10} style={{ borderColor: 'red', borderWidth: billingAddressErr.billing_phone ? 1 : 0 }} /> */}
+              <View style={{ marginBottom: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+        // justifyContent: 'space-between',
+        width: '100%',
+        borderRadius: 5,
+        backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 3,
+        },
+        shadowRadius: 5,
+        shadowOpacity: 0.05,
+        elevation: 2,
+        borderColor: 'red', borderWidth: billingAddressErr.billing_phone ? 1 : 0 }}>
+            <MaskInput
+              value={billingAddressDetails.billing_phone}
+              keyboardType="numeric"
+              placeholder="Phone Number"
+              placeholderTextColor={'#CECECE'}
+              style={{color: '#000',  padding: 10,
+              paddingLeft: 20,
+              borderRadius: 5,
+              width: '72%',
+              height: 58,fontSize:14}}
+              onChangeText={(masked, unmasked) => {
+                onChangeBillingPhoneNumber(masked); // you can use the unmasked value as well
+
+                // assuming you typed "9" all the way:
+                console.log(masked); // (99) 99999-9999
+                console.log(unmasked); // 99999999999
+              }}
+              mask={[
+                '(',
+                /\d/,
+                /\d/,
+                /\d/,
+                ')',
+                ' ',
+                /\d/,
+                /\d/,
+                /\d/,
+                '-',
+                /\d/,
+                /\d/,
+                /\d/,
+                /\d/,
+              ]}
+            />
+            </View>
+
               {/* <Dropdown placeholder="Phone Number" data={[1, 2, 3]} /> */}
               <MyTextInput placeholder="Email Address" onChangeText={onChangeBillingEmail} value={billingAddressDetails.billing_email} isOnChangeText={true} style={{ borderColor: 'red', borderWidth: billingAddressErr.billing_email ? 1 : 0 }} />
               <MyTextInput placeholder="Company Name (Optional)" onChangeText={onChangeBillingCompanyName} value={billingAddressDetails.billing_company_name} isOnChangeText={true} />
@@ -651,18 +767,10 @@ const AddAddress = () => {
             <View style={styles.saveAddress}>
               <MyButton text='Save Address' onPress={addAddressHandler} />
             </View>
-            {/* <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: hg(2) }}>
-            <View>
-              <Text style={{ color: 'black' }}>Don't have an account ? </Text>
-            </View>
-            <BorderLessBtn text='Sign Up' onPress={signupHandler} />
-          </View> */}
-
-          </ScrollView>
         </View>
-      </View>
+        </KeyboardAwareScrollView>
       {<CustomLoader showLoader={loader} />}
-    </>
+    </View>
   );
 };
 
@@ -671,15 +779,12 @@ export default AddAddress;
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    width: wd(100),
+    flex:1
   },
   subContainer: {
-    marginTop: hg(1),
-    width: wd(90),
+    padding:20
   },
   dropdownStyle: {
-    marginBottom: 15,
     flexDirection: 'row',
     alignItems: 'center',
     // justifyContent: 'space-between',

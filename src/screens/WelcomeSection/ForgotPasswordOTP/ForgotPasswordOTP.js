@@ -26,6 +26,7 @@ import WelcomeHeader from 'components/WelcomeHeader/WelcomeHeader';
 import Toast from 'react-native-toast-message';
 import CustomLoader from '../../../components/CustomLoader/CustomLoader';
 import { Service } from '../../../global/Index';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const ForgotPasswordOTP = ({navigation, route}) => {
   //variables : redux variables
@@ -104,7 +105,9 @@ const ForgotPasswordOTP = ({navigation, route}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <StatusBar backgroundColor={Colors.THEME_BROWN} />
+      
       <View style={styles.container}>
+      <KeyboardAwareScrollView>
         <ScrollView
           style={styles.mainView}
           showsVerticalScrollIndicator={false}
@@ -264,7 +267,9 @@ const ForgotPasswordOTP = ({navigation, route}) => {
             />
           </TouchableOpacity>
         </ScrollView>
+        </KeyboardAwareScrollView>
       </View>
+      
       <CustomLoader showLoader={showLoader} />
     </SafeAreaView>
   );

@@ -97,7 +97,7 @@ const Product = ({ item, showLoader = null, setShowLoader = null, setShowCourseT
     return (
         <TouchableOpacity
             onPress={() => gotoProductDetails(item?.id, '2')}
-            style={[styles.productContainer, { height: responsiveHeight(38) }]}>
+            style={[styles.productContainer, { height:'auto',padding:0 }]}>
             <View>
                 {item.Product_image[0] ? (
                     <Image
@@ -105,7 +105,7 @@ const Product = ({ item, showLoader = null, setShowLoader = null, setShowCourseT
                         style={{ width: (width - 40) * 0.42, height: 136 }}
                     />
                 ) : null}
-                <TouchableOpacity
+                <TouchableOpacity 
                     onPress={() => {
                         onLike('2', item.id, item?.isWishlist);
                     }}
@@ -116,10 +116,14 @@ const Product = ({ item, showLoader = null, setShowLoader = null, setShowCourseT
                                 ? require('assets/images/heart-selected.png')
                                 : require('assets/images/heart-yellow-outline.png')
                         }
+                        style={{ height: 18, width: 18 }}
                     />
                 </TouchableOpacity>
                 <View style={styles.starView}>
-                    <Image source={require('assets/images/star.png')} />
+                    <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+
+                    <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+                    </View>
                     <MyText
                         text={item?.avg_rating}
                         fontFamily="regular"

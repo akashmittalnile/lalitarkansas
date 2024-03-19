@@ -91,7 +91,7 @@ const Item = ({ item, type = 1, onChangeQuantity = () => { }, coupon = { applied
                 }
                 await getCartCount();
                 // Toast.show({ text1: "resp?.data?.message" });
-                // onChangeQuantity();
+                onChangeQuantity();
             } else {
                 Toast.show({ text1: resp?.data?.message });
             }
@@ -168,7 +168,7 @@ const Item = ({ item, type = 1, onChangeQuantity = () => { }, coupon = { applied
                         uri:
                             type === 1
                                 ? // ? item?.content_creator_image
-                                item?.thumb?.path : item.image
+                                item?.thumbnail : item.image
                         // : item.Product_image[0],
                     }}
                     style={styles.crseImg} />
@@ -182,7 +182,9 @@ const Item = ({ item, type = 1, onChangeQuantity = () => { }, coupon = { applied
                     />
                     <View style={styles.middleRow}>
                         <View style={styles.ratingRow}>
-                            <Image source={require('assets/images/star.png')} />
+                        <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
                             <MyText
                                 text={item?.avg_rating}
                                 fontFamily="regular"

@@ -66,6 +66,7 @@ const CustomDrawer = ({ navigation }) => {
       index: 1,
       routes: [{ name: ScreenNames.WELCOME }],
     });
+// Function to handle logout
   const logout = async () => {
     setShowLoader(true);
     try {

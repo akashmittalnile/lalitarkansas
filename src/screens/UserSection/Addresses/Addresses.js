@@ -137,10 +137,11 @@ const styles = StyleSheet.create({
         height: hg(7),
         borderRadius: wd(2),
         backgroundColor: Colors.THEME_BROWN,
+        justifyContent:'center',alignItems:'center'
     },
     press: {
         justifyContent: 'center',
-        alignItems: '',
+        alignItems: 'center',
         height: '100%',
     },
     addressTxtBtn: {

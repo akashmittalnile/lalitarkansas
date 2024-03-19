@@ -1,4 +1,4 @@
-import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigation, useIsFocused, useRoute } from '@react-navigation/native';
@@ -19,6 +19,7 @@ import ViewAll from '../../../components/ViewAll/ViewAll';
 import Divider from '../../../components/Divider/Divider';
 import { width } from '../../../global/Constant';
 import Toast from 'react-native-toast-message';
+import { ScrollView } from 'react-native-virtualized-view';
 
 const Shipping = () => {
     const navigation = useNavigation();
@@ -94,6 +95,7 @@ const Shipping = () => {
     };
 
     const modalHandler = (product_id = null) => {
+        console.log("SHIPPING-ID",product_id);
         setModalProductId(product_id);
         setIsModalVisible(preData => (!preData));
     };
@@ -378,6 +380,6 @@ const styless = StyleSheet.create({
     flatListContainer: {
         alignItems: 'center',
         width: responsiveWidth(100),
-        height: responsiveHeight(80),
+        height: responsiveHeight(90),
     },
 });

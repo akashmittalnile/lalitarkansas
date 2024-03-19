@@ -24,6 +24,7 @@ import CustomLoader from 'components/CustomLoader/CustomLoader';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-toast-message';
 //import : global
+import { shareItemHandler } from '../../../global/globalMethod';
 import {Colors, Constant, MyIcon, ScreenNames, Service} from 'global/Index';
 //import : styles
 import {styles} from './SearchProductByCategoryStyle';
@@ -35,7 +36,7 @@ import Divider from 'components/Divider/Divider';
 import MyButton from '../../../components/MyButton/MyButton';
 import SearchWithIcon from '../../../components/SearchWithIcon/SearchWithIcon';
 import SearchProductByCategoryFiltersModal from './components/SearchProductByCategoryFiltersModal/SearchProductByCategoryFiltersModal';
-import {createThumbnail} from 'react-native-create-thumbnail';
+// import {createThumbnail} from 'react-native-create-thumbnail';
 
 const SearchProductByCategory = ({navigation, dispatch, route}) => {
   //variables
@@ -405,6 +406,11 @@ const SearchProductByCategory = ({navigation, dispatch, route}) => {
     setShowLoader(false);
   };
 
+  //Amit kumar 10 mar share button setup
+  const shareHandler = async (type,id) => {
+    shareItemHandler(type, id);
+  };
+
   const onLike = async (type, id, status) => {
     setShowLoader(true);
     const formdata = new FormData();
@@ -457,7 +463,9 @@ const SearchProductByCategory = ({navigation, dispatch, route}) => {
           />
           <View style={styles.middleRow}>
             <View style={styles.ratingRow}>
-              <Image source={require('assets/images/star.png')} />
+            <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
               <MyText
                 text={item?.avg_rating}
                 fontFamily="regular"
@@ -496,22 +504,26 @@ const SearchProductByCategory = ({navigation, dispatch, route}) => {
               style={{}}
             />
             <View style={styles.iconsRow}>
-              <TouchableOpacity
+              <TouchableOpacity  style={{height: 18, width: 18}}
                 onPress={() => {
                   onLike('2', item.id, item?.isWishlist);
                 }}>
                 <Image
+                style={{height:18,width:18}}
                   source={
                     item?.isWishlist
                       ? require('assets/images/heart-selected.png')
                       : require('assets/images/heart.png')
                   }
+                  
                 />
               </TouchableOpacity>
+              <TouchableOpacity onPress={() => { shareHandler('2', item?.id); }}>
               <Image
                 source={require('assets/images/share.png')}
-                style={{marginLeft: 10}}
+                style={{ marginLeft: 10,height: 18, width: 18 }}
               />
+              </TouchableOpacity>
             </View>
           </View>
         </View>

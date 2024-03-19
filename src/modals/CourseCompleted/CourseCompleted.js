@@ -61,7 +61,9 @@ const CourseCompleted = ({visible, setVisibility}) => {
             />
             <View style={styles.middleRow}>
               <View style={styles.ratingRow}>
-                <Image source={require('assets/images/star.png')} />
+              <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
                 <MyText
                   text={item.courseRating}
                   fontFamily="regular"

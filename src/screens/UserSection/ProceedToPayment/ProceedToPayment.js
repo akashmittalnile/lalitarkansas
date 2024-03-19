@@ -2,7 +2,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
-  ScrollView,
   Switch,
   TouchableOpacity,
   Dimensions,
@@ -16,13 +15,15 @@ import {
   SafeAreaView,
   StatusBar,
   Keyboard,
-  RefreshControl
+  RefreshControl,
+  ScrollView
 } from 'react-native';
 //import : custom components
 import MyHeader from 'components/MyHeader/MyHeader';
 import MyText from 'components/MyText/MyText';
 import CustomLoader from 'components/CustomLoader/CustomLoader';
 //import : third parties
+// import { ScrollView } from 'react-native-virtualized-view';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-toast-message';
 //import : global
@@ -50,6 +51,7 @@ import { clearCart } from 'src/reduxToolkit/reducer/user';
 import { setCartCount } from '../../../reduxToolkit/reducer/user';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Colors } from '../../../global/Index';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const ProceedToPayment = ({ navigation, dispatch }) => {
   //variables
@@ -123,7 +125,8 @@ const ProceedToPayment = ({ navigation, dispatch }) => {
     routes: [{ name: ScreenNames.BOTTOM_TAB }],
   });
   const handlePayClick = async (order_id, total_amount, stripeToken) => {
-    !showLoader && setShowLoader(true);
+    // !showLoader && 
+    setShowLoader(true);
     try {
       const myData = new FormData();
       myData.append('stripeToken', stripeToken);
@@ -250,6 +253,7 @@ const ProceedToPayment = ({ navigation, dispatch }) => {
       <View style={styles.container}>
         <StripeContainer>
           <MyHeader Title="Select payment method" isBackButton />
+          
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: '20%' }}
@@ -257,6 +261,7 @@ const ProceedToPayment = ({ navigation, dispatch }) => {
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
             style={styles.mainView}>
+              <KeyboardAwareScrollView style={{flex:1,}}>
             <View style={styles.summaryContainer}>
               <View style={[styles.row, { marginBottom: 10 }]}>
                 <MyText
@@ -381,7 +386,7 @@ const ProceedToPayment = ({ navigation, dispatch }) => {
                 backgroundColor: 'white',
                 borderColor: Colors.THEME_GOLD,
                 borderWidth: 1,
-                textColor: Colors.WHITE,
+                textColor: Colors.BLACK,
                 placeholderColor: '#c9c9c9',
               }}
               style={{
@@ -471,7 +476,9 @@ const ProceedToPayment = ({ navigation, dispatch }) => {
               onPress={onConfirm}
             // onPress={handlePayClick}
             />
+            </KeyboardAwareScrollView>
           </ScrollView>
+         
         </StripeContainer>
         <CustomLoader showLoader={showLoader} />
         <SuccessfulyPurchased

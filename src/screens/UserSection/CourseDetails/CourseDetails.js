@@ -20,6 +20,7 @@ import {
   PermissionsAndroid
 } from 'react-native';
 //import : custom components
+import { useRoute, useIsFocused } from '@react-navigation/native';
 import MyText from 'components/MyText/MyText';
 import CustomLoader from 'components/CustomLoader/CustomLoader';
 //import : third parties
@@ -32,7 +33,7 @@ import { Service } from '../../../global/Index';
 import { styles } from './CourseDetailsStyle';
 //import : modal
 //import : redux
-import { connect, useSelector } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { width, height } from 'global/Constant';
 import Divider from 'components/Divider/Divider';
 import MyButton from '../../../components/MyButton/MyButton';
@@ -61,6 +62,7 @@ import defaultImg from '../../../assets/images/default-content-creator-image.png
 import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import RNFetchBlob from 'react-native-blob-util';
 import MyHeader from '../../../components/MyHeader/MyHeader';
+import moment from 'moment';
 
 const data = [
   {
@@ -128,8 +130,11 @@ const tags = [
 ];
 
 const addToCartObject = {};
-const CourseDetails = ({ navigation, dispatch, route }) => {
+const CourseDetails = ({ navigation,route }) => {
+const dispatch = useDispatch()
   const defaultImgPath = Image.resolveAssetSource(defaultImg).uri;
+  // variables : ref
+  const reviewRef=useRef();
   //variables
   const LINE_HEIGTH = 25;
   //variables : redux
@@ -138,6 +143,7 @@ const CourseDetails = ({ navigation, dispatch, route }) => {
   const [showLoader, setShowLoader] = useState(false);
   const [selectedTag, setSelectedTag] = useState('1');
   const [productDetails, setProductDetails] = useState({});
+  const[reviewbutton,setReviewbutton]=useState('false');
   const [review, setReview] = useState('');
   const [starRating, setStarRating] = useState(1);
   const [showReviewModal, setShowReviewModal] = useState(false);
@@ -152,13 +158,15 @@ const CourseDetails = ({ navigation, dispatch, route }) => {
   const [showCourseTypeModal, setShowCourseTypeModal] = useState(false)
   const [scrolling, setscrolling] = useState(false);
   const scrollY = useSharedValue(0);
+  const focused = useIsFocused();
   useEffect(() => {
-    // const unsubscribe = navigation.addListener('focus', () => {
-    //   console.log('userToken', userToken);
+    const unsubscribe = navigation.addListener('focus', () => {
+      // console.log('userToken', userToken);
     getProductDetails();
-    // });
-    // return unsubscribe;
-  }, []);
+    setReviewbutton(false);
+    });
+    return unsubscribe;
+  }, [focused]);
   const handleScroll = event => {
     const yOffset = event.nativeEvent.contentOffset.y;
     scrollY.value = event.nativeEvent.contentOffset.y;
@@ -196,10 +204,13 @@ const CourseDetails = ({ navigation, dispatch, route }) => {
         Service.OBJECT_TYPE_DETAILS,
         postData,
       );
-      console.log('getProductDetails resp', JSON.stringify(resp?.data?.data));
+      // console.log('getProductDetails resp', JSON.stringify(resp?.data?.data));
       if (resp?.data?.status) {
         const data = await generateThumb(resp?.data?.data);
         setProductDetails(data);
+        setReviewbutton(resp?.data?.data?.is_reviewed);
+        setReview(resp?.data?.data?.my_review.review)
+        setStarRating(resp?.data?.data.my_review.rating)
         // Toast.show(resp?.data?.message)
       } else {
         Toast.show(resp?.data?.message);
@@ -356,7 +367,7 @@ const CourseDetails = ({ navigation, dispatch, route }) => {
     }
     setShowLoader(false);
   };
-
+// AMit kumar 18 mar share button fun.
   const shareHandler = async () => {
     shareItemHandler(route?.params?.type, route?.params?.id);
   };
@@ -579,8 +590,8 @@ const CourseDetails = ({ navigation, dispatch, route }) => {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
           style={styles.mainView}>
-          {productDetails?.thumb?.path && <ImageBackground
-            source={{ uri: productDetails?.thumb?.path }}
+          {productDetails?.thumbnail && <ImageBackground
+            source={{ uri: productDetails?.thumbnail }}
             // source={require('assets/images/rectangle-1035.png')}
             style={styles.crseImg}
             imageStyle={{ borderRadius: 10 }}>
@@ -615,7 +626,9 @@ const CourseDetails = ({ navigation, dispatch, route }) => {
           <View style={styles.middleRow}>
             <View style={styles.middleLeftRow}>
               <View style={styles.ratingRow}>
-                <Image source={require('assets/images/star.png')} />
+                <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
                 <MyText
                   text={productDetails?.avg_rating}
                   fontFamily="regular"
@@ -655,7 +668,7 @@ const CourseDetails = ({ navigation, dispatch, route }) => {
                         ? require('assets/images/heart-selected.png')
                         : require('assets/images/heart.png')
                     }
-                    style={{ height: 14, width: 14 }}
+                    style={{ height: 16, width: 16 }}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={shareHandler}>
@@ -698,7 +711,7 @@ const CourseDetails = ({ navigation, dispatch, route }) => {
                 ...showModal?.data,
                 url: showModal?.data?.introduction_video,
               }}
-            // {...props}
+            // {...navigation}
             />
           ) : null}
           <View style={styles.bottomRow}>
@@ -775,7 +788,7 @@ const CourseDetails = ({ navigation, dispatch, route }) => {
             </View>
           ))} */}
           {productDetails?.chapters
-            ?.filter(el => el?.chapter_steps?.length > 0)
+            ?.filter(el => el?.chapter_steps?.length > 0 )
             ?.map((chap, chapindex) => (
               <>
                 <ViewAll
@@ -795,6 +808,7 @@ const CourseDetails = ({ navigation, dispatch, route }) => {
                       // console.log('FlatList item', item);
                       return (
                         <AccordionItem
+                        allitem={productDetails}
                           item={item}
                           index={index}
                           chapindex={chapindex}
@@ -846,18 +860,23 @@ const CourseDetails = ({ navigation, dispatch, route }) => {
                       }
                       style={styles.reviewImg}
                     />
+                    <View style={{width:210}}>
                     <MyText
                       text={`${item.first_name} ${item.last_name}`}
                       fontFamily="medium"
                       fontSize={13}
+                      numberOfLines={2}
                       textColor={Colors.LIGHT_GREY}
                       style={{ marginLeft: 10 }}
                     />
+                    </View>
+                  
                     <MyText
-                      text={`${item.created_date}`}
+                      text={`${moment(item.created_date).format('YY-MM-DD')}`}
                       fontFamily="medium"
                       fontSize={13}
                       textColor={Colors.LIGHT_GREY}
+                      textAlign={'right'}
                       style={{ marginLeft: 10 }}
                     />
                   </View>
@@ -945,6 +964,7 @@ const CourseDetails = ({ navigation, dispatch, route }) => {
         ) : null}
         <CustomLoader showLoader={showLoader} />
         <Review
+          key={reviewRef}
           visible={showReviewModal}
           setVisibility={setShowReviewModal}
           starRating={starRating}
@@ -952,6 +972,7 @@ const CourseDetails = ({ navigation, dispatch, route }) => {
           review={review}
           setReview={setReview}
           submitReview={submitReview}
+          isReviewed={reviewbutton}
         />
         <PrerequisiteModal
           visible={showPrerequisiteModal}
@@ -978,10 +999,10 @@ const CourseDetails = ({ navigation, dispatch, route }) => {
     </SafeAreaView>
   );
 };
-const mapDispatchToProps = dispatch => ({
-  dispatch,
-});
-export default connect(null, mapDispatchToProps)(CourseDetails);
+// const mapDispatchToProps = dispatch => ({
+//   dispatch,
+// });
+export default  CourseDetails;
 
 const ViewAllSub = ({
   text,

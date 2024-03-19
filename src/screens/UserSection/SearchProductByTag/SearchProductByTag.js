@@ -24,6 +24,7 @@ import CustomLoader from 'components/CustomLoader/CustomLoader';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-toast-message';
 //import : global
+import { shareItemHandler } from '../../../global/globalMethod';
 import {Colors, Constant, MyIcon, ScreenNames, Service} from 'global/Index';
 //import : styles
 import {styles} from './SearchProductByTagStyle';
@@ -336,6 +337,11 @@ const SearchProductByTag = ({navigation, dispatch, route}) => {
     }
     setShowLoader(false);
   };
+
+  const shareHandler = async (type,id) => {
+    shareItemHandler(type, id);
+  };
+
   const onLike = async (type, id, status) => {
     setShowLoader(true);
     const formdata = new FormData();
@@ -355,7 +361,7 @@ const SearchProductByTag = ({navigation, dispatch, route}) => {
       console.log('onLike resp', resp?.data);
       if (resp?.data?.status) {
         Toast.show({text1: resp.data.message});
-        getAllProducts();
+       await getAllProducts();
       } else {
         Toast.show({text1: resp.data.message});
       }
@@ -364,9 +370,15 @@ const SearchProductByTag = ({navigation, dispatch, route}) => {
     }
     setShowLoader(false);
   };
+  const gotoProductDetails = (id, type) => {
+    navigation.navigate(ScreenNames.PRODUCT_DETAILS, { id, type });
+  };
+
   const renderProduct = ({item}) => {
     return (
-      <View style={styles.courseContainer}>
+      <TouchableOpacity
+      onPress={() => gotoProductDetails(item?.id, '2')}
+      style={styles.courseContainer}>
         <ImageBackground
           source={{uri: item?.Product_image[0]}}
           style={styles.crseImg}>
@@ -384,7 +396,9 @@ const SearchProductByTag = ({navigation, dispatch, route}) => {
           />
           <View style={styles.middleRow}>
             <View style={styles.ratingRow}>
-              <Image source={require('assets/images/star.png')} />
+            <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
               <MyText
                 text={item?.avg_rating}
                 fontFamily="regular"
@@ -414,16 +428,24 @@ const SearchProductByTag = ({navigation, dispatch, route}) => {
             </View>
           </View>
           <View style={styles.bottomRow}>
-            <MyText
+          <MyText
               text={'$' + item.price}
               fontFamily="bold"
               fontSize={14}
               textColor={Colors.THEME_GOLD}
               letterSpacing={0.14}
-              style={{}}
+              style={{ textDecorationLine: (item?.sale_price !== item.price) ? 'line-through' : 'none' }}
             />
+            {item?.sale_price !== item.price && <MyText
+              text={'$' + item.sale_price}
+              fontFamily="bold"
+              fontSize={14}
+              textColor={Colors.THEME_GOLD}
+              letterSpacing={0.14}
+              style={{}}
+            />}
             <View style={styles.iconsRow}>
-              <TouchableOpacity
+              <TouchableOpacity style={{height: 18, width: 18}}
                 onPress={() => {
                   onLike('2', item.id, item?.isWishlist);
                 }}>
@@ -433,16 +455,19 @@ const SearchProductByTag = ({navigation, dispatch, route}) => {
                       ? require('assets/images/heart-selected.png')
                       : require('assets/images/heart.png')
                   }
+                  style={{ height: 18, width: 18 }}
                 />
               </TouchableOpacity>
-              <Image
-                source={require('assets/images/share.png')}
-                style={{marginLeft: 10}}
-              />
+              <TouchableOpacity onPress={() => { shareHandler(2, item?.id); }}>
+                <Image
+                  source={require('assets/images/share.png')}
+                  style={{ marginLeft: 10,height: 18, width: 18 }}
+                />
+              </TouchableOpacity>
             </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
   const isFilterApplied = () => {

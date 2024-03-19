@@ -2,7 +2,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
-  ScrollView,
   Switch,
   TouchableOpacity,
   Dimensions,
@@ -31,6 +30,7 @@ import {width} from '../../global/Constant';
 
 // const AccordionItem = ({num, time, title, description}) => {
 const AccordionItem = ({
+  allitem,
   item,
   index,
   documents,
@@ -50,7 +50,7 @@ const AccordionItem = ({
   setShowViewPdfModal,
   setPdfLink,
 }) => {
-  console.log("thumbnail image",item?.thumb?.path);
+  console.log("thumbnail image",allitem?.course_status);
   // console.log('AccordionItem item', item?.type, item);
   const shareValue = useSharedValue(0);
   const [bodySectionHeight, setBodySectionHeight] = useState(0);
@@ -192,7 +192,19 @@ const AccordionItem = ({
       <TouchableOpacity
         activeOpacity={0.7}
         style={styles.btnStyle}
-        onPress={() => toggleButton(item)}>
+        onPress={() => {
+          if(allitem?.course_status === 1){
+            toggleButton(item)
+          }else{
+            Toast.show({
+              text1:
+                allitem?.course_status_name
+            });
+            return;
+          }
+         
+        }
+          }>
         <View style={styles.leftRow}>
           <View style={styles.leftSubRow}>
             <View style={styles.numView}>
@@ -314,6 +326,9 @@ const AccordionItem = ({
                       }}
                       onPress={() => {
                         // openQuizInBrowser(item?.quiz_url);
+                        // if(){
+
+                        // }
                         gotoSideMenuLinks(item.title, item?.quiz_url);
                       }}
                     />
@@ -601,7 +616,7 @@ const AccordionItem = ({
                 Platform.OS === 'ios' ? {paddingTop: 16} : null,
               ]}>
               <MyButton
-                text="Mark as completed"
+                text="Mark as complete"
                 onPress={() => markAsCompleted(item.id)}
                 style={[
                   {

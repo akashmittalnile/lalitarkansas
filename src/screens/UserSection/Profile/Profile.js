@@ -1,8 +1,7 @@
 //import : react components
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  View,
-  ScrollView,
+  View, 
   Switch,
   TouchableOpacity,
   Dimensions,
@@ -24,6 +23,7 @@ import MyHeader from 'components/MyHeader/MyHeader';
 import MyText from 'components/MyText/MyText';
 import CustomLoader from 'components/CustomLoader/CustomLoader';
 //import : third parties
+import { ScrollView } from 'react-native-virtualized-view';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-toast-message';
 //import : global
@@ -175,12 +175,16 @@ const Profile = ({ navigation, dispatch }) => {
       console.log('userToken', userToken);
       // setSelectedTab('1')
       getProfileData();
+      getProfileData('3');
+      
+
     });
     return unsubscribe;
   }, [navigation]);
   const checkcon = () => {
     setSelectedTab('1')
     getProfileData(selectedTab);
+  
   };
   const wait = timeout => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -204,7 +208,8 @@ const Profile = ({ navigation, dispatch }) => {
         if (id === '1') {
           setProfileTabData(resp?.data?.data);
         } else if (id === '3') {
-          setCertificatesTabData(resp?.data?.data);
+          // const thumbData = await generateThumb(resp?.data?.data);
+          setCertificateData([...resp?.data?.data]);
         } else if (id === '4') {
           setNotificationsTabData(resp?.data?.data);
         } else if (id === '5') {
@@ -285,8 +290,9 @@ const Profile = ({ navigation, dispatch }) => {
     setPhone(data?.phone);
   };
   const setCertificatesTabData = async data => {
-    const thumbData = await generateThumb(data);
-    setCertificateData([...thumbData]);
+    setShowLoader(true)
+   
+    setShowLoader(false)
      
   };
   const setNotificationsTabData = data => { };
@@ -399,29 +405,29 @@ const Profile = ({ navigation, dispatch }) => {
       setShowImageSourceModal(false);
     });
   };
-  const generateThumb = async data => {
-    console.log('generateThumb', JSON.stringify(data));
-    let updatedData = [...data];
+  // const generateThumb = async data => {
+  //   console.log('generateThumb', JSON.stringify(data));
+  //   let updatedData = [...data];
     
-    try {
-      updatedData = await Promise.all(
-        data?.map?.(async el => {
-          const thumb = await createThumbnail({
-            url: el?.video,
-            timeStamp: 1000,
-          });
-          return {
-            ...el,
-            thumb,
-          };
-        }),
-      );
-    } catch (error) {
-      console.error('Error generating thumbnails:', error);
-    }
-    console.log('thumb data cart', updatedData);
-    return updatedData;
-  };
+  //   try {
+  //     updatedData = await Promise.all(
+  //       data?.map?.(async el => {
+  //         const thumb = await createThumbnail({
+  //           url: el?.video,
+  //           timeStamp: 1000,
+  //         });
+  //         return {
+  //           ...el,
+  //           thumb,
+  //         };
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error('Error generating thumbnails:', error);
+  //   }
+  //   console.log('thumb data cart', updatedData);
+  //   return updatedData;
+  // };
   const openAddCardModal = () => {
     setShowAddCardModal(true);
   };

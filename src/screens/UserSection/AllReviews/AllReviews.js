@@ -1,3 +1,4 @@
+// Amit kumar 18 march 2024 Review modal Changes
 //import : react components
 import React, {useEffect, useRef, useState} from 'react';
 import {
@@ -62,6 +63,8 @@ const reviewsData = [
   },
 ];
 const AllReviews = ({navigation, dispatch, route}) => {
+  // variables : ref
+  const reviewRef=useRef();
   //variables
   const LINE_HEIGTH = 25;
   //variables : redux
@@ -69,6 +72,8 @@ const AllReviews = ({navigation, dispatch, route}) => {
   const userInfo = useSelector(state => state.user.userInfo);
   const [showLoader, setShowLoader] = useState(false);
   const [reviewList, setReviewList] = useState([]);
+  const[reviewbutton,setReviewbutton]=useState('false');
+   
   const [review, setReview] = useState('');
   const [starRating, setStarRating] = useState(1);
   const [showReviewModal, setShowReviewModal] = useState(false);
@@ -101,9 +106,12 @@ const AllReviews = ({navigation, dispatch, route}) => {
         Service.REVIEW_LIST,
         postData,
       );
-      console.log('getReviewList resp', resp?.data);
+      console.log('getReviewList resp', resp?.data?.my_review);
       if (resp?.data?.status) {
         setReviewList(resp?.data);
+        setReviewbutton(resp?.data?.is_reviewed);
+        setReview(resp?.data?.my_review.review);
+        setStarRating(resp?.data?.my_review.rating)
         // Toast.show({text1: resp?.data?.message})
       } else {
         Toast.show({text1: resp?.data?.message});
@@ -168,7 +176,7 @@ const AllReviews = ({navigation, dispatch, route}) => {
           {reviewList?.review_list?.length > 0 ? (
             <ViewAllSub
               text="Ratings & Reviews"
-              rating={reviewList?.avg_rating > 0 ? reviewList?.avg_rating : 0}
+              rating={reviewList?.avg_rating > 0 ? parseFloat(reviewList?.avg_rating).toFixed(1) : 0}
               reviews={reviewList?.review_list?.length}
               showButton={false}
               style={{marginBottom: 17,}}
@@ -209,7 +217,7 @@ const AllReviews = ({navigation, dispatch, route}) => {
                     source={require('assets/images/star.png')
                     }
                     resizeMode='contain'
-                    style={{ height: responsiveHeight(2), width: responsiveHeight(2),marginLeft:7}}
+                    style={{ height: 14, width: 14,marginLeft:7}}
                   />
                 </View>
                 <MyText
@@ -236,6 +244,7 @@ const AllReviews = ({navigation, dispatch, route}) => {
         </ScrollView>
         <CustomLoader showLoader={showLoader} />
         <Review
+          key={reviewRef}
           visible={showReviewModal}
           setVisibility={setShowReviewModal}
           starRating={starRating}
@@ -243,6 +252,7 @@ const AllReviews = ({navigation, dispatch, route}) => {
           review={review}
           setReview={setReview}
           submitReview={submitReview}
+          isReviewed={reviewbutton}
         />
       </View>
     </SafeAreaView>

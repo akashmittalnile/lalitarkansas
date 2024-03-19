@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView, TextInput, TouchableOpacity, Text } from 'react-native'
+import { View, StyleSheet, TextInput, TouchableOpacity, Text ,ScrollView} from 'react-native'
 import React, { useEffect, useState } from 'react';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import MyHeader from '../../../components/MyHeader/MyHeader';
@@ -9,6 +9,7 @@ import { responsiveHeight as hg, responsiveFontSize, responsiveHeight, responsiv
 import MyText from '../../../components/MyText/MyText';
 import BackBtn from '../../../components/Button/BackBtn';
 import Toast from 'react-native-toast-message';
+ 
 
 const Coupon = () => {
     const { params } = useRoute();
@@ -144,7 +145,7 @@ const Coupon = () => {
                     </View>
                     {allCoupons?.length > 0 ? allCoupons.map((item, index) => (
                         <Discount item={item} key={index} total={params.subTotal} onSelectCoupon={onSelectCoupon} applied={(item.code === selectedPromo?.item?.code)} />
-                    )) : <Text style={{ fontSize: responsiveFontSize(2.5), textAlign: 'center', marginTop: responsiveHeight(15) }}>
+                    )) : <Text style={{ fontSize: responsiveFontSize(2.5), textAlign: 'center', marginTop: responsiveHeight(15),color:'#000000' }}>
                         No Coupons Available</Text>}
                 </ScrollView>
             </View>

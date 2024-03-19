@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
-  ScrollView,
   Switch,
   TouchableOpacity,
   Dimensions,
@@ -22,6 +21,7 @@ import MyHeader from 'components/MyHeader/MyHeader';
 import MyText from 'components/MyText/MyText';
 import CustomLoader from 'components/CustomLoader/CustomLoader';
 //import : third parties
+import { ScrollView } from 'react-native-virtualized-view';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-toast-message';
 //import : global
@@ -71,7 +71,7 @@ const Cart = ({ navigation, dispatch }) => {
   useEffect(() => {
     getCartList();
     // showAllAddressHandler();
-  }, [coupon?.applied]);
+  }, [coupon?.applied,focused]);
   const checkcon = () => {
     getCartList();
   };
@@ -113,6 +113,7 @@ const Cart = ({ navigation, dispatch }) => {
         }
         if (resp?.data?.data?.shippingAddressId) {
           const tempAddress = resp?.data?.address?.filter(item => item.id === resp.data.data.shippingAddressId?.address_id);
+           
           if (tempAddress.length > 0) {
             setAddress(tempAddress);
           } else {
@@ -136,8 +137,8 @@ const Cart = ({ navigation, dispatch }) => {
         if (!doCoursesExists) {
           setCartListData(resp?.data);
         } else {
-          const data = await generateThumb(resp?.data?.data);
-          resp.data.data.items = [...data];
+          // const data = await generateThumb(resp?.data?.data);
+          // resp.data.data.items = [...resp?.data?.data];
           setCartListData(resp?.data);
         }
         // Toast.show({text1: resp?.data?.message})
@@ -150,32 +151,32 @@ const Cart = ({ navigation, dispatch }) => {
     }
     setShowLoader(false);
   };
-  const generateThumb = async data => {
-    let updatedData = [...data?.items];
-    try {
-      updatedData = await Promise.all(
-        data?.items?.map?.(async el => {
-          if (el?.type == '2') {
-            return el;
-          }
-          // console.log('here', JSON.stringify(el));
-          const thumb = await createThumbnail({
-            url: el?.image,
-            // url: `http://nileprojects.in/arkansas/public/upload/disclaimers-introduction/1695287295.mp4`,
-            timeStamp: 1000,
-          });
-          return {
-            ...el,
-            thumb,
-          };
-        }),
-      );
-    } catch (error) {
-      console.error('Error generating thumbnails:', error);
-    }
+  // const generateThumb = async data => {
+  //   let updatedData = [...data?.items];
+  //   try {
+  //     updatedData = await Promise.all(
+  //       data?.items?.map?.(async el => {
+  //         if (el?.type == '2') {
+  //           return el;
+  //         }
+  //         // console.log('here', JSON.stringify(el));
+  //         const thumb = await createThumbnail({
+  //           url: el?.image,
+  //           // url: `http://nileprojects.in/arkansas/public/upload/disclaimers-introduction/1695287295.mp4`,
+  //           timeStamp: 1000,
+  //         });
+  //         return {
+  //           ...el,
+  //           thumb,
+  //         };
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error('Error generating thumbnails:', error);
+  //   }
 
-    return updatedData;
-  };
+  //   return updatedData;
+  // };
   const gotoShippingScreen = () => {
     if (cartListData.type === 1) {
       navigation.navigate(ScreenNames.PROCEED_TO_PAYMENT);
@@ -205,7 +206,8 @@ const Cart = ({ navigation, dispatch }) => {
     }
   };
 
-  const renderItem = ({ item }) => <Item item={item} type={cartListData.type} onChangeQuantity={getCartList} coupon={coupon} shownShippingBtn={cartListData.type === 1 ? true : false} disabledBtn={cartListData.type === 2 ? false : true} shippingBtn={() => { modalHandler(item.product_id); }} shippingDetails={allAppliedCoupons} />;
+  const renderItem = ({ item }) => <Item item={item} type={cartListData.type} onChangeQuantity={()=>{
+    getCartList()}} coupon={coupon} shownShippingBtn={cartListData.type === 1 ? true : false} disabledBtn={cartListData.type === 2 ? false : true} shippingBtn={() => { modalHandler(item.product_id); }} shippingDetails={allAppliedCoupons} />;
 
   const showAllAddress = () => {
     navigation.navigate(ScreenNames.ADDRESSESS);

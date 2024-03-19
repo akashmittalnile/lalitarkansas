@@ -55,7 +55,7 @@ const TopCategory = ({navigation, dispatch, route}) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
       setSearchValue('')
-     
+      getCategories();
     });
     return unsubscribe;
   }, [navigation, focused]);

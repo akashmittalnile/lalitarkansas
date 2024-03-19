@@ -5,8 +5,7 @@ import {
   Modal,
   TouchableOpacity,
   Image,
-  TouchableWithoutFeedback,
-  ScrollView,
+  TouchableWithoutFeedback, 
 } from 'react-native';
 //import : custom components
 import MyText from 'components/MyText/MyText';
@@ -14,6 +13,7 @@ import DateSelector from 'components/DateSelector/DateSelector';
 // global
 import {Colors, MyIcon} from 'global/Index';
 //third parties
+import { ScrollView } from 'react-native-virtualized-view';
 import moment from 'moment';
 import Toast from 'react-native-toast-message';
 //styles

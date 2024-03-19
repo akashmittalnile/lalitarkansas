@@ -1,8 +1,7 @@
 //import : react components
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  View,
-  ScrollView,
+  View, 
   Switch,
   TouchableOpacity,
   Dimensions,
@@ -40,13 +39,14 @@ const CertificateTab = ({
   setPdfLink,
   setPdfTitle,
 }) => {
+  // console.warn("certificateList",certificateList);
   const defaultCreatorImgPath = Image.resolveAssetSource(defaultCreatorImg).uri;
   const renderCertificate = ({ item }) => {
     return (
       <View style={styles.courseContainer}>
         <View style={styles.courseSubContainer}>
           <ImageBackground
-            source={{ uri: item?.thumb?.path }}
+            source={{ uri: item?.thumbnail }}
             style={styles.crseImg}
             imageStyle={{ borderRadius: 10 }}></ImageBackground>
           {/* <View style={styles.crseImg}>
@@ -78,7 +78,9 @@ const CertificateTab = ({
             />
             <View style={styles.middleRow}>
               <View style={styles.ratingRow}>
-                <Image source={require('assets/images/star.png')} />
+              <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
                 <MyText
                   text={item.avg_rating}
                   fontFamily="regular"

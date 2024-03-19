@@ -23,6 +23,7 @@ import { useRoute, useIsFocused } from '@react-navigation/native';
 import MyHeader from 'components/MyHeader/MyHeader';
 import MyText from 'components/MyText/MyText';
 import CustomLoader from 'components/CustomLoader/CustomLoader';
+import { shareItemHandler } from '../../../global/globalMethod';
 //import : third parties
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-toast-message';
@@ -49,6 +50,8 @@ import defaultImg from '../../../assets/images/default-content-creator-image.png
 
 const MyOrders = ({ navigation, dispatch }) => {
   const defaultImgPath = Image.resolveAssetSource(defaultImg).uri;
+  // variables : ref
+  const reviewRef=useRef();
   //variables
   const LINE_HEIGTH = 25;
   //variables : redux
@@ -62,7 +65,8 @@ const MyOrders = ({ navigation, dispatch }) => {
   const [selectedId, setSelectedId] = useState('1');
   const [selectedType, setSelectedType] = useState(null);
   const [review, setReview] = useState('');
-  const [isReviewed, setIsReviewed] = useState(false);
+  const [isReviewed, setIsReviewed] = useState('false');
+ 
   const [tabs, setTabs] = useState([
     {
       id: '1',
@@ -141,19 +145,21 @@ const MyOrders = ({ navigation, dispatch }) => {
 
   useEffect(() => {
     getMyOrders();
-  }, [navigation]);
+  }, []);
   useEffect(() => {
-    const unsubscribe = navigation.addListener('blur', () => {
-      setSearchValue('')
+    const unsubscribe = navigation.addListener('focus', () => {
+      setSearchValue('');
+      // setSelectedTab(1);
       setTemporarySelectedTab('1');
-      setSelectedCourseCategries([])
-      setTempSelectedCourseCategries([])
-      setSelectedProductCategries([])
-      setTempSelectedProductCategries([])
-      setStartDate('')
-      setEndDate('')
-      setTempStartDate('')
-      setTempEndDate('')
+      setSelectedCourseCategries([]);
+      setTempSelectedCourseCategries([]);
+      setSelectedProductCategries([]);
+      setTempSelectedProductCategries([]);
+      setStartDate('');
+      setEndDate('');
+      setTempStartDate('');
+      setTempEndDate('');
+      setReview('');
     });
     return unsubscribe;
   }, [navigation, focused]);
@@ -181,11 +187,11 @@ const MyOrders = ({ navigation, dispatch }) => {
         Service.MY_ORDER,
         formdata,
       );
-      console.log('getMyOrders resp', resp?.data);
-      if (resp?.data?.status) {
+      console.log('getMyOrders resp', resp?.data.data.length);
+      if (resp?.data?.status == true) {
         if (type === '1') {
-          const updatedData = await generateThumb(resp?.data?.data);
-          setCourseData(updatedData);
+          // const updatedData = await generateThumb(resp?.data?.data);
+          setCourseData(resp?.data?.data);
         } else {
           // console.log('chal gya')
           setProductData(resp?.data?.data);
@@ -219,29 +225,29 @@ const MyOrders = ({ navigation, dispatch }) => {
       setRefreshing(false);
     });
   }, []);
-  const generateThumb = async data => {
-    console.log('generateThumb');
-    let updatedData = [...data];
-    try {
-      updatedData = await Promise.all(
-        data?.map?.(async el => {
-          // console.log('el.introduction_video trending', el.introduction_video);
-          const thumb = await createThumbnail({
-            url: el?.introduction_video,
-            timeStamp: 1000,
-          });
-          return {
-            ...el,
-            thumb,
-          };
-        }),
-      );
-    } catch (error) {
-      console.error('Error generating thumbnails:', error);
-    }
-    // console.log('thumb data SearchAllType', updatedData);
-    return updatedData;
-  };
+  // const generateThumb = async data => {
+  //   // console.log('generateThumb');
+  //   let updatedData = [...data];
+  //   try {
+  //     updatedData = await Promise.all(
+  //       data?.map?.(async el => {
+  //         // console.log('el.introduction_video trending', el.introduction_video);
+  //         const thumb = await createThumbnail({
+  //           url: el?.introduction_video,
+  //           timeStamp: 1000,
+  //         });
+  //         return {
+  //           ...el,
+  //           thumb,
+  //         };
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error('Error generating thumbnails:', error);
+  //   }
+  //   // console.log('thumb data SearchAllType', updatedData);
+  //   return updatedData;
+  // };
   const showDateFilter = () => {
     if (selectedTab == '2') {
       return false;
@@ -250,6 +256,7 @@ const MyOrders = ({ navigation, dispatch }) => {
     }
     return false;
   };
+  //Amit kumar 14 march filter issues fixed 
   const isFilterApplied = () => {
     if (showSelectedCategories()) {
       return true;
@@ -396,12 +403,14 @@ const MyOrders = ({ navigation, dispatch }) => {
   const openFilterModal = () => {
     setShowFilterModal(true);
   };
-  const openReviewModal = (id, type, isReviewed = false) => {
+  const openReviewModal = (id, type, isReviewed = 'false',my_review,rating) => {
     // console.log({ id });
     setSelectedId(id);
     setSelectedType(type);
     setShowReviewModal(true);
     setIsReviewed(isReviewed);
+    setReview(my_review);
+    setStarRating(rating);
   };
 
   const onClearFilter = () => { };
@@ -421,7 +430,16 @@ const MyOrders = ({ navigation, dispatch }) => {
   const changeSelectedTab = async id => {
     await AsyncStorage.setItem('myOrderSelectedTab', id);
     setSelectedTab(id);
-    setSearchValue('')
+    setSearchValue('');
+    setTemporarySelectedTab('1');
+    setSelectedCourseCategries([])
+    setTempSelectedCourseCategries([])
+    setSelectedProductCategries([])
+    setTempSelectedProductCategries([])
+    setStartDate('')
+    setEndDate('')
+    setTempStartDate('')
+    setTempEndDate('')
     getMyOrders(id);
   };
 
@@ -499,9 +517,9 @@ const MyOrders = ({ navigation, dispatch }) => {
         </View>
         <View style={styles.courseSubContainer}>
           <ImageBackground
-            source={{ uri: item?.thumb?.path }}
+            source={{ uri: item?.thumbnail }}
             style={styles.crseImg}
-            imageStyle={{ borderRadius: 10 }}></ImageBackground>
+            imageStyle={{ borderRadius: 10 }}/>
           <View style={{ marginLeft: 11, width: width * 0.55 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <MyText
@@ -528,7 +546,9 @@ const MyOrders = ({ navigation, dispatch }) => {
             />
             <View style={styles.middleRow}>
               <View style={styles.ratingRow}>
-                <Image source={require('assets/images/star.png')} />
+              <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
                 <MyText
                   text={item?.avg_rating}
                   fontFamily="regular"
@@ -659,7 +679,9 @@ const MyOrders = ({ navigation, dispatch }) => {
             />
             <View style={styles.middleRow}>
               <View style={styles.ratingRow}>
-                <Image source={require('assets/images/star.png')} />
+              <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
                 <MyText
                   text={item?.avg_rating}
                   fontFamily="regular"
@@ -700,22 +722,26 @@ const MyOrders = ({ navigation, dispatch }) => {
               />
               <View style={styles.iconsRow}>
                 {/* <Image source={require('assets/images/heart-selected.png')} /> */}
+                <TouchableOpacity onPress={() => {
+                  shareItemHandler('2', item?.id);
+                }}>
                 <Image
                   source={require('assets/images/share.png')}
-                  style={{ marginLeft: 10 }}
+                  style={{ marginLeft: 10, height: 16, width: 16 }}
                 />
+                </TouchableOpacity>
               </View>
             </View>
-            {/* {item.isReviewed == '0' ? ( */}
+            {/* {item.is_reviewed == '0' ? ( */}
             <MyButton
-              text={item.isReviewed ? "Edit your review" : "WRITE YOUR REVIEW HERE"}
+              text={item.is_reviewed ? "Edit your review" : "WRITE YOUR REVIEW HERE"}
               style={{
                 // width: '90%',
                 height: 40,
                 marginTop: 8,
                 backgroundColor: Colors.THEME_BROWN,
               }}
-              onPress={() => openReviewModal(item?.id, '2', item.isReviewed)}
+              onPress={() => openReviewModal(item?.id, '2', item.is_reviewed,item?.my_review?.review,item?.my_review?.rating)}
             />
             {/* ) : null} */}
           </View>
@@ -820,8 +846,8 @@ const MyOrders = ({ navigation, dispatch }) => {
 
         setShowFilterModal(false);
         if (temporarySelectedTab === '1') {
-          const updatedData = await generateThumb(resp?.data?.data);
-          setCourseData(updatedData);
+          // const updatedData = await generateThumb(resp?.data?.data);
+          setCourseData(resp?.data?.data);
         } else {
           setProductData(resp?.data?.data);
         }
@@ -834,39 +860,40 @@ const MyOrders = ({ navigation, dispatch }) => {
     setShowLoader(false);
   };
   const applyFilters2 = async (searchParam = '') => {
-    console.log({ searchParam })
-    const isDeletingLastCharacterInSearch =
-      searchValue?.toString()?.trim()?.length === 1 &&
-      searchParam?.toString()?.trim()?.length === 0;
-    const isSearching = isDeletingLastCharacterInSearch || searchParam !== '';
-    setOriginalValues2();
+    
+    console.log("applyFilters2-Searchtext",{ searchParam })
+    // const isDeletingLastCharacterInSearch =
+    //   searchValue?.toString()?.trim()?.length === 1 &&
+    //   searchParam?.toString()?.trim()?.length === 0;
+    // const isSearching = isDeletingLastCharacterInSearch || searchParam !== '';
+    // setOriginalValues2();
     const postData = new FormData();
     postData.append('type', selectedTab);
-    let catIds = [];
-    if (temporarySelectedTab === '1') {
-      catIds = courseCategries
-        ?.filter(el => tempSelectedCourseCategries?.includes(el?.name))
-        ?.map(el => el?.id);
-    } else {
-      catIds = productCategries
-        ?.filter(el => TempSelectedProductCategries?.includes(el?.name))
-        ?.map(el => el?.id);
-    }
-    if (catIds?.length > 0) {
-      catIds?.map(el => postData.append('category[]', el));
-    }
-    if (temporarySelectedTab === '1') {
-      if (tempStartDate !== '' && tempEndDate !== '') {
-        postData.append(
-          'start_date',
-          moment(tempStartDate).format('YYYY-MM-DD'),
-        );
-        postData.append('end_date', moment(tempEndDate).format('YYYY-MM-DD'));
-      }
-    }
-    if (tempSelectedRatingValues?.length > 0) {
-      tempSelectedRatingValues?.map(el => postData.append('rating[]', el));
-    }
+    // let catIds = [];
+    // if (temporarySelectedTab === '1') {
+    //   catIds = courseCategries
+    //     ?.filter(el => tempSelectedCourseCategries?.includes(el?.name))
+    //     ?.map(el => el?.id);
+    // } else {
+    //   catIds = productCategries
+    //     ?.filter(el => TempSelectedProductCategries?.includes(el?.name))
+    //     ?.map(el => el?.id);
+    // }
+    // if (catIds?.length > 0) {
+    //   catIds?.map(el => postData.append('category[]', el));
+    // }
+    // if (temporarySelectedTab === '1') {
+    //   if (tempStartDate !== '' && tempEndDate !== '') {
+    //     postData.append(
+    //       'start_date',
+    //       moment(tempStartDate).format('YYYY-MM-DD'),
+    //     );
+    //     postData.append('end_date', moment(tempEndDate).format('YYYY-MM-DD'));
+    //   }
+    // }
+    // if (tempSelectedRatingValues?.length > 0) {
+    //   tempSelectedRatingValues?.map(el => postData.append('rating[]', el));
+    // }
     const isSearchTermExists = searchParam?.toString()?.trim()?.length > 0;
     const isSearchValueExists = searchValue?.toString()?.trim()?.length > 0;
     // console.log(
@@ -892,7 +919,7 @@ const MyOrders = ({ navigation, dispatch }) => {
         }
       }
     }
-    // console.log('applyFilters postData', JSON.stringify(postData));
+    console.log('applyFilters2 postData-', JSON.stringify(postData));
     setShowLoader(true);
     try {
       const resp = await Service.postApiWithToken(
@@ -900,20 +927,23 @@ const MyOrders = ({ navigation, dispatch }) => {
         Service.MY_ORDER,
         postData,
       );
-      console.log('applyFilters resp shoaib', resp?.data);
-      if (resp?.data?.data.length === 0 && selectedTab === '1') {
-        console.log("chal gya");
-        setCourseData([]);
-        return;
-      }
-      if (resp?.data?.status) {
-        setShowFilterModal(false);
+     
+      // if (resp?.data?.data.length === 0 && selectedTab === '1') {
+      //   console.log("chal gya");
+      //   setCourseData([]);
+      //   return;
+      // }
+      if (resp?.data?.status == true) {
+        
         if (selectedTab === '1') {
-          const updatedData = await generateThumb(resp?.data?.data);
-          setCourseData(updatedData);
+          console.log('applyFilters2 resp selectedTab === 1', resp?.data.data.length);
+          // const updatedData = await generateThumb(resp?.data?.data);
+          setCourseData(resp?.data?.data);
         } else {
+          console.log('applyFilters2 selectedTab === 2', resp?.data.data.length);
           setProductData(resp?.data?.data);
         }
+        setShowFilterModal(false);
       } else {
         Toast.show({ text1: resp.data.message });
       }
@@ -938,6 +968,7 @@ const MyOrders = ({ navigation, dispatch }) => {
     setTempEndDate('');
     setStartDate('');
     setEndDate('');
+    setReview('');
     await getMyOrders();
   };
   const removeFilter = async (filterType, item) => {
@@ -1019,8 +1050,8 @@ const MyOrders = ({ navigation, dispatch }) => {
         }
         setShowFilterModal(false);
         if (temporarySelectedTab === '1') {
-          const updatedData = await generateThumb(resp?.data?.data);
-          setCourseData(updatedData);
+          // const updatedData = await generateThumb(resp?.data?.data);
+          setCourseData(resp?.data?.data);
         } else {
           setProductData(resp?.data?.data);
         }
@@ -1078,6 +1109,8 @@ const MyOrders = ({ navigation, dispatch }) => {
                 console.log('SearchWithIcon', e);
                 setSearchValue(e);
                 applyFilters2(e);
+                setCourseData([]);
+                setProductData([]);
               }}
               style={{ marginTop: 10 }}
               showDot={isFilterApplied}
@@ -1164,6 +1197,7 @@ const MyOrders = ({ navigation, dispatch }) => {
           multiSliderValuesChange={multiSliderValuesChange}
         />
         <Review
+          key={reviewRef}
           visible={showReviewModal}
           setVisibility={setShowReviewModal}
           starRating={starRating}

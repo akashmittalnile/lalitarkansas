@@ -4,7 +4,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
-  ScrollView,
   Switch,
   TouchableOpacity,
   Dimensions,
@@ -16,6 +15,7 @@ import {
   ImageBackground,
   SafeAreaView,
   StatusBar,
+  ScrollView,
   RefreshControl
 } from 'react-native';
 //import : custom components
@@ -23,6 +23,7 @@ import MyHeader from 'components/MyHeader/MyHeader';
 import MyText from 'components/MyText/MyText';
 import CustomLoader from 'components/CustomLoader/CustomLoader';
 //import : third parties
+// import { ScrollView } from 'react-native-virtualized-view';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-toast-message';
 //import : global
@@ -42,6 +43,7 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+import { useIsFocused } from '@react-navigation/native';
 import AccordionItem from '../../../components/AccordionItem/AccordionItem';
 import ViewAll from '../../../components/ViewAll/ViewAll';
 import FAB_Button from '../../../components/FAB_Button/FAB_Button';
@@ -54,6 +56,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CourseTypeModal from '../../../modals/CourseType/CourseTypeModal';
 import { shareItemHandler } from '../../../global/globalMethod';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
+import moment from 'moment';
 
 const data = [
   {
@@ -122,6 +125,9 @@ const tags = [
 
 const addToCartObject = {};
 const ProductDetails = ({ navigation, dispatch, route }) => {
+  // variables : ref
+  const reviewRef=useRef();
+  const isFocused = useIsFocused();
   //variables
   const LINE_HEIGTH = 25;
   //variables : redux
@@ -130,6 +136,7 @@ const ProductDetails = ({ navigation, dispatch, route }) => {
   const [showLoader, setShowLoader] = useState(false);
   const [selectedTag, setSelectedTag] = useState('1');
   const [productDetails, setProductDetails] = useState({});
+  const[reviewbutton,setReviewbutton]=useState('false');
   const [sliderData, setSliderData] = useState([]);
   const [review, setReview] = useState('');
   const [starRating, setStarRating] = useState(1);
@@ -141,7 +148,7 @@ const ProductDetails = ({ navigation, dispatch, route }) => {
 
   useEffect(() => {
     getProductDetails();
-  }, [route?.params?.id]);
+  }, [route?.params?.id,isFocused]);
   const checkcon = () => {
     getProductDetails();
   };
@@ -173,6 +180,9 @@ const ProductDetails = ({ navigation, dispatch, route }) => {
       console.log('getProductDetails resp', resp?.data);
       if (resp?.data?.status) {
         setProductDetails(resp?.data?.data);
+        setReviewbutton(resp?.data?.data?.is_reviewed);
+        setReview(resp?.data?.data?.my_review.review);
+        setStarRating(resp?.data?.data.my_review.rating);
         let sliData = [];
         sliData = resp?.data?.data?.Product_image?.map(el => ({
           // slider: el,
@@ -243,6 +253,7 @@ const ProductDetails = ({ navigation, dispatch, route }) => {
         Toast.show({ text1: resp?.data?.message || resp?.data?.Message });
         setStarRating(1);
         setReview('');
+        getProductDetails()
       } else {
         Toast.show({ text1: resp?.data?.message || resp?.data?.Message });
       }
@@ -430,7 +441,18 @@ const ProductDetails = ({ navigation, dispatch, route }) => {
                   borderRadius: 20
                 }}
               />
-            ) : null}
+            ) : <View style={{
+              backgroundColor: Colors.THEME_GOLD,
+              width: width *0.98 ,
+              height: height * 0.30,
+              borderRadius: 20,
+              justifyContent:'center',
+              alignItems:'center'
+              }}>
+<Text style={{color:Colors.WHITE,fontSize:16, fontFamily:"medium"}}>
+  NO IMAGE FOUND
+</Text>
+              </View>}
             </View>  
           ) : null} 
           {/* {typeof productDetails === 'object' ? (
@@ -469,7 +491,9 @@ const ProductDetails = ({ navigation, dispatch, route }) => {
           <View style={styles.middleRow}>
             <View style={styles.middleLeftRow}>
               <View style={styles.ratingRow}>
-                <Image source={require('assets/images/star.png')} />
+              <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
                 <MyText
                   text={productDetails?.avg_rating}
                   fontFamily="regular"
@@ -508,7 +532,7 @@ const ProductDetails = ({ navigation, dispatch, route }) => {
                         ? require('assets/images/heart-selected.png')
                         : require('assets/images/heart.png')
                     }
-                    style={{ height: 14, width: 14 }}
+                    style={{ height: 16, width: 16 }}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
@@ -592,11 +616,22 @@ const ProductDetails = ({ navigation, dispatch, route }) => {
                       }
                       style={styles.reviewImg}
                     />
+                    <View style={{width:210}}>
                     <MyText
                       text={`${item.first_name} ${item.last_name}`}
                       fontFamily="medium"
                       fontSize={13}
+                      numberOfLines={2}
                       textColor={Colors.LIGHT_GREY}
+                      style={{ marginLeft: 10 }}
+                    />
+                    </View>
+                     <MyText
+                      text={`${moment(item.created_date).format('YY-MM-DD')}`}
+                      fontFamily="medium"
+                      fontSize={13}
+                      textColor={Colors.LIGHT_GREY}
+                      textAlign={'right'}
                       style={{ marginLeft: 10 }}
                     />
                   </View>
@@ -657,10 +692,11 @@ const ProductDetails = ({ navigation, dispatch, route }) => {
             />}
           </View>
           {productDetails?.isPurchased &&
-            <FAB_Button onPress={openReviewModal} bottom={responsiveHeight(10)} />}
+            <FAB_Button onPress={openReviewModal} bottom={responsiveHeight(8)} />}
         </ScrollView>
         <CustomLoader showLoader={showLoader} />
         <Review
+          key={reviewRef}
           visible={showReviewModal}
           setVisibility={setShowReviewModal}
           starRating={starRating}
@@ -668,6 +704,7 @@ const ProductDetails = ({ navigation, dispatch, route }) => {
           review={review}
           setReview={setReview}
           submitReview={submitReview}
+          isReviewed={reviewbutton}
         />
       </View>
       {showCourseTypeModal && <CourseTypeModal yesBtnHandler={yesBtnHandler1} noBtnHandler={noBtnHandler1} type={addToCartObject.type} />}
@@ -698,10 +735,9 @@ const ViewAllSub = ({
           textColor={'#455A64'}
         />
         <View style={styles.ratingView}>
-          <Image
-            source={require('assets/images/selected-star.png')}
-            style={{ height: 10, width: 10 }}
-          />
+        <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
           <MyText
             text={rating}
             fontSize={13}

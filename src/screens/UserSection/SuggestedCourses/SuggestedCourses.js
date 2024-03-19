@@ -24,6 +24,7 @@ import CustomLoader from 'components/CustomLoader/CustomLoader';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-toast-message';
 //import : global
+import { shareItemHandler } from '../../../global/globalMethod';
 import {Colors, Constant, MyIcon, ScreenNames, Service} from 'global/Index';
 //import : styles
 import {styles} from './SuggestedCoursesStyle';
@@ -120,8 +121,8 @@ const SuggestedCourses = ({navigation, dispatch}) => {
               })),
           );
         }
-        const updatedData = await generateThumb(resp?.data?.data);
-        setCourseData(updatedData);
+        // const updatedData = await generateThumb(resp?.data?.data);
+        setCourseData(resp?.data?.data);
       } else {
         Toast.show({text1: resp.data.message});
       }
@@ -130,31 +131,35 @@ const SuggestedCourses = ({navigation, dispatch}) => {
     }
     setShowLoader(false);
   };
-  const generateThumb = async data => {
-    // console.log('generateThumb');
-    let updatedData = [];
-    try {
-      updatedData = await Promise.all(
-        data?.map?.(async el => {
-          // console.log('el.introduction_video trending', el.introduction_video);
-          const thumb = await createThumbnail({
-            url: el.introduction_video,
-            timeStamp: 1000,
-          });
-          return {
-            ...el,
-            thumb,
-          };
-        }),
-      );
-    } catch (error) {
-      console.error('Error generating thumbnails:', error);
-    }
-    // console.log('thumb data SearchAllType', updatedData);
-    return updatedData;
-  };
+  // const generateThumb = async data => {
+  //   // console.log('generateThumb');
+  //   let updatedData = [];
+  //   try {
+  //     updatedData = await Promise.all(
+  //       data?.map?.(async el => {
+  //         // console.log('el.introduction_video trending', el.introduction_video);
+  //         const thumb = await createThumbnail({
+  //           url: el.introduction_video,
+  //           timeStamp: 1000,
+  //         });
+  //         return {
+  //           ...el,
+  //           thumb,
+  //         };
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error('Error generating thumbnails:', error);
+  //   }
+  //   // console.log('thumb data SearchAllType', updatedData);
+  //   return updatedData;
+  // };
   const gotoCourseDetails = (id, type) => {
     navigation.navigate(ScreenNames.COURSE_DETAILS, {id, type});
+  };
+  //Amit kumar 10 mar share button setup
+  const shareHandler = async (type,id) => {
+    shareItemHandler(type, id);
   };
   const onLike = async (type, id, status) => {
     setShowLoader(true);
@@ -397,8 +402,8 @@ const SuggestedCourses = ({navigation, dispatch}) => {
       console.log('applyFilters resp', resp?.data);
       if (resp?.data?.status) {
         setShowFilterModal(false);
-        const updatedData = await generateThumb(resp?.data?.data);
-        setCourseData(updatedData);
+        // const updatedData = await generateThumb(resp?.data?.data);
+        setCourseData(resp?.data?.data);
       } else {
         Toast.show({text1: resp.data.message});
       }
@@ -465,8 +470,8 @@ const SuggestedCourses = ({navigation, dispatch}) => {
       console.log('applyFilters resp', resp?.data);
       if (resp?.data?.status) {
         setShowFilterModal(false);
-        const updatedData = await generateThumb(resp?.data?.data);
-        setCourseData(updatedData);
+        // const updatedData = await generateThumb(resp?.data?.data);
+        setCourseData(resp?.data?.data);
       } else {
         Toast.show({text1: resp.data.message});
       }
@@ -539,8 +544,8 @@ const SuggestedCourses = ({navigation, dispatch}) => {
       console.log('removeFilter resp', resp?.data);
       if (resp?.data?.status) {
         setShowFilterModal(false);
-        const updatedData = await generateThumb(resp?.data?.data);
-        setCourseData(updatedData);
+        // const updatedData = await generateThumb(resp?.data?.data);
+        setCourseData(resp?.data?.data);
       } else {
         Toast.show({text1: resp.data.message});
       }
@@ -555,7 +560,7 @@ const SuggestedCourses = ({navigation, dispatch}) => {
         onPress={() => gotoCourseDetails(item?.id, '1')}
         style={styles.courseContainer}>
         <ImageBackground
-          source={{uri: item?.thumb?.path}}
+          source={{uri: item?.thumbnail}}
           style={styles.crseImg}
           imageStyle={{borderRadius: 10}}>
           <TouchableOpacity onPress={() => {
@@ -577,7 +582,9 @@ const SuggestedCourses = ({navigation, dispatch}) => {
           />
           <View style={styles.middleRow}>
             <View style={styles.ratingRow}>
-              <Image source={require('assets/images/star.png')} />
+            <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
               <MyText
                 text={item?.avg_rating}
                 fontFamily="regular"
@@ -613,11 +620,12 @@ const SuggestedCourses = ({navigation, dispatch}) => {
               style={{}}
             />
             <View style={styles.iconsRow}>
-              <TouchableOpacity
+              <TouchableOpacity  style={{height: 18, width: 18}}
                 onPress={() => {
                   onLike('1', item.id, item?.isWishlist);
                 }}>
                 <Image
+                style={{ height: 18, width: 18 }}
                   source={
                     item?.isWishlist
                       ? require('assets/images/heart-selected.png')
@@ -625,10 +633,13 @@ const SuggestedCourses = ({navigation, dispatch}) => {
                   }
                 />
               </TouchableOpacity>
+              
+              <TouchableOpacity onPress={() => { shareHandler('1', item?.id); }}>
               <Image
                 source={require('assets/images/share.png')}
-                style={{marginLeft: 10}}
+                style={{ marginLeft: 10,height: 18, width: 18 }}
               />
+              </TouchableOpacity>
             </View>
           </View>
         </View>

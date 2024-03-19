@@ -20,6 +20,7 @@ import {styles} from './SignupStyle';
 import {CommonActions} from '@react-navigation/native';
 import MyText from 'components/MyText/MyText';
 //third parties
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //redux
 import {useDispatch} from 'react-redux';
@@ -111,30 +112,31 @@ useEffect(() => {
     routes: [{name: ScreenNames.LOGIN}],
   });
   const Validation = () => {
-    console.log("phone,,,,,",phone.trim().length)
+    var EmailReg =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (filePath == '') {
-      Toast.show({text1: 'Please upload Profile Image'});
+      Toast.show({text1: 'Please Upload Profile Image'});
       return;
-    } else if (firstName == '') {
-      Toast.show({text1: 'Please enter First Name'});
+    } else if (firstName == '' || firstName.trim().length == 0) {
+      Toast.show({text1: 'Please Enter First Name'});
       return false;
-    } else if (lastName == '') {
-      Toast.show({text1: 'Please enter Last Name'});
+    } else if (lastName == '' || lastName.trim().length == 0) {
+      Toast.show({text1: 'Please Enter Last Name'});
       return false;
-    } else if (email == '') {
-      Toast.show({text1: 'Please enter Email Address'});
+    } else if (email == '' || email.trim().length == 0) {
+      Toast.show({text1: 'Please Enter Email Address'});
       return false;
-    } else if (password == '') {
-      Toast.show({text1: 'Please enter Password'});
+    }else if (!EmailReg.test(email)) {
+      Toast.show({text1: 'Please Enter Valid Email Address'});
       return false;
-    } else if (phone == '') {
-      Toast.show({text1: 'Please enter Phone Number'});
+    } else if (phone == '' || phone.trim().length == 0) {
+      Toast.show({text1: 'Please Enter Phone Number'});
       return false
-    }else if (phone.trim().length < 10) {
-      Toast.show({text1: 'Please valid Phone Number'});
+    }else if (phone.trim().length < 14) {
+      Toast.show({text1: 'Please Enter Valid Phone Number'});
       return false ;
-    } else if (password == '') {
-      Toast.show({text1: 'Please enter Password'});
+    } else if (password == '' || password.trim().length == 0) {
+      Toast.show({text1: 'Please Enter Password'});
       return false;
     }
     return true;
@@ -143,42 +145,42 @@ useEffect(() => {
     if (!Validation()) {
       return;
     }
-    // setShowLoader(true);
-    // try {
-    //   const formaData = new FormData();
-    //   // const isRegistered=await messaging().isDeviceRegisteredForRemoteMessages()
-    //   // console.log(isRegistered);
-    //   // const token = await messaging().getToken();
-    //   // console.log("TOKEN",token);
-    //   const imageName = filePath?.uri?.slice(
-    //     filePath?.uri?.lastIndexOf('/'),
-    //     filePath?.uri?.length,
-    //   );
-    //   formaData.append('profile_image', {
-    //     name: imageName,
-    //     type: filePath?.type,
-    //     uri: filePath?.uri,
-    //   });
-    //   formaData.append('first_name', firstName);
-    //   formaData.append('last_name', lastName);
-    //   formaData.append('email', email);
-    //   formaData.append('phone', phone);
-    //   formaData.append('password', password);
-    //   formaData.append('fcm_token', 'jklmhfbfjhdsfjkfgg');
-    //   formaData.append('role', '1');
-    //   console.log('signUpUser formaData', formaData);
-    //   const resp = await Service.postApi(Service.REGISTER, formaData);
-    //   console.log('signUpUser resp', resp?.data);
-    //   if (resp?.data?.status) {
-    //     Toast.show({text1: resp.data.message});
-    //     openSuccessModal();
-    //   } else {
-    //     Toast.show({text1: resp.data.message});
-    //   }
-    // } catch (error) {
-    //   console.log('error in signUpUser', error);
-    // }
-    // setShowLoader(false);
+    setShowLoader(true);
+    try {
+      const formaData = new FormData();
+      // const isRegistered=await messaging().isDeviceRegisteredForRemoteMessages()
+      // console.log(isRegistered);
+      // const token = await messaging().getToken();
+      // console.log("TOKEN",token);
+      const imageName = filePath?.uri?.slice(
+        filePath?.uri?.lastIndexOf('/'),
+        filePath?.uri?.length,
+      );
+      formaData.append('profile_image', {
+        name: imageName,
+        type: filePath?.type,
+        uri: filePath?.uri,
+      });
+      formaData.append('first_name', firstName);
+      formaData.append('last_name', lastName);
+      formaData.append('email', email);
+      formaData.append('phone', phone);
+      formaData.append('password', password);
+      formaData.append('fcm_token', 'jklmhfbfjhdsfjkfgg');
+      formaData.append('role', '1');
+      console.log('signUpUser formaData', formaData);
+      const resp = await Service.postApi(Service.REGISTER, formaData);
+      console.log('signUpUser resp', resp?.data);
+      if (resp?.data?.status) {
+        Toast.show({text1: resp.data.message});
+        openSuccessModal();
+      } else {
+        Toast.show({text1: resp.data.message});
+      }
+    } catch (error) {
+      console.log('error in signUpUser', error);
+    }
+    setShowLoader(false);
   };
   //function : imp function
   const openCamera = () => {
@@ -381,7 +383,6 @@ useEffect(() => {
               CountryCode={selectedCountry.dial_code}
               placeholder="Enter Phone Number"
               keyboardType="number-pad"
-              maxLength={10}
               // onPress={() => setShow(true)}
               onChangeText={text => setPhone(text)}
               onSubmitEditing={() => passwordRef.current.focus()}

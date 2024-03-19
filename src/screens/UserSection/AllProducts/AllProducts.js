@@ -24,6 +24,7 @@ import CustomLoader from 'components/CustomLoader/CustomLoader';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-toast-message';
 //import : global
+import { shareItemHandler } from '../../../global/globalMethod';
 import { Colors, Constant, MyIcon, ScreenNames, Service } from 'global/Index';
 //import : styles
 import { styles } from './AllProductsStyle';
@@ -335,6 +336,9 @@ const AllProducts = ({ navigation, dispatch }) => {
     }
     setShowLoader(false);
   };
+  const shareHandler = async (type,id) => {
+    shareItemHandler(type, id);
+  };
   const onLike = async (type, id, status) => {
     setShowLoader(true);
     const formdata = new FormData();
@@ -354,7 +358,7 @@ const AllProducts = ({ navigation, dispatch }) => {
       console.log('onLike resp', resp?.data);
       if (resp?.data?.status) {
         Toast.show({ text1: resp.data.message });
-        getAllProducts();
+       await getAllProducts();
       } else {
         Toast.show({ text1: resp.data.message });
       }
@@ -388,7 +392,9 @@ const AllProducts = ({ navigation, dispatch }) => {
           />
           <View style={styles.middleRow}>
             <View style={styles.ratingRow}>
-              <Image source={require('assets/images/star.png')} />
+              <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
               <MyText
                 text={item?.avg_rating}
                 fontFamily="regular"
@@ -435,7 +441,7 @@ const AllProducts = ({ navigation, dispatch }) => {
               style={{}}
             />}
             <View style={styles.iconsRow}>
-              <TouchableOpacity
+              <TouchableOpacity style={{height: 18, width: 18}}
                 onPress={() => {
                   onLike('2', item.id, item?.isWishlist);
                 }}>
@@ -445,12 +451,16 @@ const AllProducts = ({ navigation, dispatch }) => {
                       ? require('assets/images/heart-selected.png')
                       : require('assets/images/heart.png')
                   }
+                  style={{ height: 18, width: 18 }}
                 />
               </TouchableOpacity>
+              <TouchableOpacity onPress={() => { shareHandler(2, item?.id); }}>
+               
               <Image
                 source={require('assets/images/share.png')}
                 style={{ marginLeft: 10 }}
               />
+              </TouchableOpacity>
             </View>
           </View>
         </View>

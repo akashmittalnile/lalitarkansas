@@ -136,8 +136,8 @@ const Home = ({props, navigation, dispatch }) => {
           data.special_course = resp?.data?.data?.special_course?.slice(0, 2);
         }
         // console.log('remaining data', JSON.stringify(data));
-        const dataWithThumb = await generateThumb(data);
-        setHomeData(dataWithThumb);
+        // const dataWithThumb = await generateThumb(data);
+        setHomeData(data);
       } else {
         Toast.show({ text1: resp.data.message });
       }
@@ -212,122 +212,122 @@ const Home = ({props, navigation, dispatch }) => {
     }
     showLoader && setShowLoader(false);
   };
-  const generateThumb = async data => {
-    // console.log('generateThumb');
-    let trending_course_data = [...data?.trending_course];
-    // let suggested_course_data = [...data?.suggested_course];
-    let special_course_data = [...data?.special_course];
-    try {
-      // console.log({ trending_course_data })
-      trending_course_data = await Promise.all(
-        data?.trending_course?.map?.(async el => {
-          // console.log('el.introduction_video trending', el.introduction_video);
-          const thumb = await createThumbnail({
-            url: el.introduction_video,
-            // timeStamp: 1000,
-            timeStamp: 200,
-          });
-          // console.log({ thumb })
-          return {
-            ...el,
-            thumb,
-          };
-        }),
-      );
-    } catch (error) {
-      console.error('Error generating thumbnails:', error);
-    }
-    try {
-      special_course_data = await Promise.all(
-        data?.special_course?.map?.(async el => {
-          // console.log('el.introduction_video suggested', el.introduction_video);
-          const thumb = await createThumbnail({
-            url: el.introduction_video,
-            timeStamp: 1000,
-          });
-          return {
-            ...el,
-            thumb,
-          };
-        }),
-      );
-    } catch (error) {
-      console.error('Error generating thumbnails:', error);
-    }
-    // try {
-    //   suggested_course_data = await Promise.all(
-    //     data?.suggested_course?.map?.(async el => {
-    //       // console.log('el.introduction_video suggested', el.introduction_video);
-    //       const thumb = await createThumbnail({
-    //         url: el.introduction_video,
-    //         timeStamp: 1000,
-    //       });
-    //       return {
-    //         ...el,
-    //         thumb,
-    //       };
-    //     }),
-    //   );
-    // } catch (error) {
-    //   console.error('Error generating thumbnails:', error);
-    // }
+  // const generateThumb = async data => {
+  //   // console.log('generateThumb');
+  //   let trending_course_data = [...data?.trending_course];
+  //   // let suggested_course_data = [...data?.suggested_course];
+  //   let special_course_data = [...data?.special_course];
+  //   try {
+  //     // console.log({ trending_course_data })
+  //     trending_course_data = await Promise.all(
+  //       data?.trending_course?.map?.(async el => {
+  //         // console.log('el.introduction_video trending', el.introduction_video);
+  //         const thumb = await createThumbnail({
+  //           url: el.introduction_video,
+  //           // timeStamp: 1000,
+  //           timeStamp: 200,
+  //         });
+  //         // console.log({ thumb })
+  //         return {
+  //           ...el,
+  //           thumb,
+  //         };
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error('Error generating thumbnails:', error);
+  //   }
+  //   try {
+  //     special_course_data = await Promise.all(
+  //       data?.special_course?.map?.(async el => {
+  //         // console.log('el.introduction_video suggested', el.introduction_video);
+  //         const thumb = await createThumbnail({
+  //           url: el.introduction_video,
+  //           timeStamp: 1000,
+  //         });
+  //         return {
+  //           ...el,
+  //           thumb,
+  //         };
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error('Error generating thumbnails:', error);
+  //   }
+  //   // try {
+  //   //   suggested_course_data = await Promise.all(
+  //   //     data?.suggested_course?.map?.(async el => {
+  //   //       // console.log('el.introduction_video suggested', el.introduction_video);
+  //   //       const thumb = await createThumbnail({
+  //   //         url: el.introduction_video,
+  //   //         timeStamp: 1000,
+  //   //       });
+  //   //       return {
+  //   //         ...el,
+  //   //         thumb,
+  //   //       };
+  //   //     }),
+  //   //   );
+  //   // } catch (error) {
+  //   //   console.error('Error generating thumbnails:', error);
+  //   // }
 
-    // console.log('trending_course_data', trending_course_data);
-    // console.log('suggested_course_data', suggested_course_data);
-    // data.suggested_course = suggested_course_data;
-    data.trending_course = trending_course_data;
-    data.special_course = special_course_data;
-    // console.log('thumb data', data);
-    // const updatedData = {...data, suggested_course: suggested_course_data, trending_course: trending_course_data}
-    return data;
-  };
-  const generateTrendingThumb = async data => {
-    // console.log('generateThumb');
-    let trending_course_data = [...data];
-    try {
-      trending_course_data = await Promise.all(
-        data?.map?.(async el => {
-          // console.log('el.introduction_video trending', el.introduction_video);
-          const thumb = await createThumbnail({
-            url: el.introduction_video,
-            timeStamp: 1000,
-          });
-          return {
-            ...el,
-            thumb,
-          };
-        }),
-      );
-    } catch (error) {
-      console.error('Error generating thumbnails:', error);
-    }
-    console.log('thumb trending data', trending_course_data);
-    // const updatedData = {...data, suggested_course: suggested_course_data, trending_course: trending_course_data}
-    return trending_course_data;
-  };
-  const generateSpecialThumb = async data => {
-    // console.log('generateThumb');
-    let special_course_data = [...data];
-    try {
-      special_course_data = await Promise.all(
-        data?.map?.(async el => {
-          // console.log('el.introduction_video trending', el.introduction_video);
-          const thumb = await createThumbnail({
-            url: el.introduction_video,
-            timeStamp: 1000,
-          });
-          return {
-            ...el,
-            thumb,
-          };
-        }),
-      );
-    } catch (error) {
-      console.error('Error generating thumbnails:', error);
-    }
-    console.log('thumb trending data', special_course_data);
-    return special_course_data;
-  };
+  //   // console.log('trending_course_data', trending_course_data);
+  //   // console.log('suggested_course_data', suggested_course_data);
+  //   // data.suggested_course = suggested_course_data;
+  //   data.trending_course = trending_course_data;
+  //   data.special_course = special_course_data;
+  //   // console.log('thumb data', data);
+  //   // const updatedData = {...data, suggested_course: suggested_course_data, trending_course: trending_course_data}
+  //   return data;
+  // };
+  // const generateTrendingThumb = async data => {
+  //   // console.log('generateThumb');
+  //   let trending_course_data = [...data];
+  //   try {
+  //     trending_course_data = await Promise.all(
+  //       data?.map?.(async el => {
+  //         // console.log('el.introduction_video trending', el.introduction_video);
+  //         const thumb = await createThumbnail({
+  //           url: el.introduction_video,
+  //           timeStamp: 1000,
+  //         });
+  //         return {
+  //           ...el,
+  //           thumb,
+  //         };
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error('Error generating thumbnails:', error);
+  //   }
+  //   console.log('thumb trending data', trending_course_data);
+  //   // const updatedData = {...data, suggested_course: suggested_course_data, trending_course: trending_course_data}
+  //   return trending_course_data;
+  // };
+  // const generateSpecialThumb = async data => {
+  //   // console.log('generateThumb');
+  //   let special_course_data = [...data];
+  //   try {
+  //     special_course_data = await Promise.all(
+  //       data?.map?.(async el => {
+  //         // console.log('el.introduction_video trending', el.introduction_video);
+  //         const thumb = await createThumbnail({
+  //           url: el.introduction_video,
+  //           timeStamp: 1000,
+  //         });
+  //         return {
+  //           ...el,
+  //           thumb,
+  //         };
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error('Error generating thumbnails:', error);
+  //   }
+  //   console.log('thumb trending data', special_course_data);
+  //   return special_course_data;
+  // };
   const fetchMoreTrendingCourses = async () => {
     console.log('original trending', originalHomeData?.trending_course?.length);
     if (
@@ -342,18 +342,18 @@ const Home = ({props, navigation, dispatch }) => {
         homeData?.trending_course?.length,
         homeData?.trending_course?.length + 2,
       );
-      console.log('data', data);
+      // console.log('data', data);
       // console.log(
       //   'fetchMoreTrendingCourses',
       //   JSON.stringify(originalHomeData?.trending_course),
       // );
-      const updatedData = await generateTrendingThumb(data);
+      // const updatedData = await generateTrendingThumb(data);
       // console.log('here3', updatedData);
       const localHomeData = deepCopy(homeData);
       // console.log('here3', localHomeData);
       localHomeData.trending_course = [
         ...homeData?.trending_course,
-        ...updatedData,
+        ...data,
       ];
       // console.log('here4', JSON.stringify(localHomeData));
       setHomeData(deepCopy(localHomeData));
@@ -381,13 +381,13 @@ const Home = ({props, navigation, dispatch }) => {
       //   'fetchMoreTrendingCourses',
       //   JSON.stringify(originalHomeData?.special_course),
       // );
-      const updatedData = await generateSpecialThumb(data);
+      // const updatedData = await generateSpecialThumb(data);
       // console.log('here3', updatedData);
       const localHomeData = deepCopy(homeData);
       // console.log('here3', localHomeData);
       localHomeData.special_course = [
         ...homeData?.special_course,
-        ...updatedData,
+        ...data,
       ];
       // console.log('here4', JSON.stringify(localHomeData));
       setHomeData(deepCopy(localHomeData));
@@ -631,7 +631,7 @@ const Home = ({props, navigation, dispatch }) => {
             />
           </View>
           <View style={styles.topRightRow}>
-            <TouchableOpacity
+            <TouchableOpacity style={{ height: 18, width: 18,justifyContent:'center',alignItems:'center',  }}
               onPress={() => {
                 onLike('1', item.id, item?.isWishlist);
               }}>
@@ -641,19 +641,21 @@ const Home = ({props, navigation, dispatch }) => {
                     ? require('assets/images/heart-selected.png')
                     : require('assets/images/heart.png')
                 }
+                 style={{ height: 18, width: 18 }}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => { shareHandler(item?.id); }}>
-              <FastImage
+            <TouchableOpacity style={{ height: 18, width: 18,justifyContent:'center',alignItems:'center',  }}
+             onPress={() => { shareHandler(item?.id); }}>
+              <Image
                 source={require('assets/images/share.png')}
                 style={{ marginLeft: 10 }}
               />
             </TouchableOpacity>
           </View>
         </View>
-        {item?.thumb?.path ? (
+        {item?.thumbnail != null? (
           <FastImage
-            source={{ uri: item?.thumb?.path }}
+            source={{ uri: item?.thumbnail }}
             style={styles.crseImg}>
             <TouchableOpacity
               onPress={() => {
@@ -695,7 +697,9 @@ const Home = ({props, navigation, dispatch }) => {
             </View>
           </View>
           <View style={styles.bottomRight}>
-            <Image source={require('assets/images/star.png')} />
+          <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
             <MyText
               text={item?.avg_rating}
               fontFamily="regular"
@@ -784,7 +788,7 @@ const Home = ({props, navigation, dispatch }) => {
     await shareItemHandler(1, id);
   };
 
-  // console.log({ userToken }, "home screen chal gyi")
+  console.log({ userToken }, "home screen chal gyi")
   //UI
   return (
     <SafeAreaView style={{ flex: 1 }}>

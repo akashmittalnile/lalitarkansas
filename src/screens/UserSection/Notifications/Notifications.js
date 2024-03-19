@@ -2,7 +2,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
-  ScrollView,
   Switch,
   TouchableOpacity,
   Dimensions,
@@ -20,7 +19,9 @@ import {
 import MyHeader from 'components/MyHeader/MyHeader';
 import MyText from 'components/MyText/MyText';
 import CustomLoader from 'components/CustomLoader/CustomLoader';
+import {CommonActions} from '@react-navigation/native';
 //import : third parties
+import { ScrollView } from 'react-native-virtualized-view';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-toast-message';
 //import : global
@@ -171,8 +172,12 @@ const Notifications = ({ navigation, dispatch }) => {
     }
     showLoader && setShowLoader(false);
   };
+  const resetIndexGoToHome = CommonActions.reset({
+    index: 1,
+    routes: [{name: ScreenNames.BOTTOM_TAB}],
+  });
   const gotoHome = () => {
-    navigation.navigate(ScreenNames.HOME);
+    navigation.dispatch(resetIndexGoToHome);
   };
 
   // const Icon = type => {

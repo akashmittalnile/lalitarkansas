@@ -34,7 +34,7 @@ import WelcomeHeader from 'components/WelcomeHeader/WelcomeHeader';
 import MyTextInput from 'components/MyTextInput/MyTextInput';
 import MyIconButton from 'components/MyIconButton/MyIconButton';
 import Divider from '../../../components/Divider/Divider';
-import TextInputWithFlag from '../../../components/TextInputWithFlag/TextInputWithFlag';
+ 
 import { CountryPicker } from 'react-native-country-codes-picker';
 import SuccessfulSignup from '../../../modals/SuccessfulSignup/SuccessfulSignup';
 import { Service } from '../../../global/Index';
@@ -71,6 +71,43 @@ const Login = ({ navigation }) => {
     setEmail('');
     setPassword('');
   }, [isFocused]);
+// Function to check if the user is already logged in
+// const checkLoginStatus = async () => {
+//   try {
+    
+//     const token = await AsyncStorage.getItem('userToken');
+//     console.error('checkLoginStatus login status:', token);
+//     // If token exists, user is already logged in
+//     return !token;
+//   } catch (error) {
+//     console.error('Error checking login status:', error);
+//     return false;
+//   }
+// };
+
+// Function to handle login
+// const handleLogin = async ( ) => {
+//   try {
+    
+//     // Check if user is already logged in elsewhere
+//     const isAlreadyLoggedIn = await checkLoginStatus();
+//     if (isAlreadyLoggedIn != null) {
+      
+//       // Perform actions to invalidate session on other devices
+//       // This might involve sending a request to the server to revoke other tokens
+//       await signInUser();
+//     }else{
+//       Toast.show({ text1: 'This account is login in other device allready' });
+//     }
+     
+//   } catch (error) {
+//     console.error('Error logging in:', error);
+//     // Handle login failure
+//   }
+// };
+
+
+
   //function : navigation function
   const gotoSignUp = () => {
     navigation.navigate(ScreenNames.SIGN_UP);

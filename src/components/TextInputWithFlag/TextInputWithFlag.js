@@ -7,6 +7,8 @@ import MyText from 'components/MyText/MyText';
 import {Colors, MyIcon} from 'global/Index';
 //import : styles
 import {styles} from './TextInputWithFlagStyle';
+//import : third parties
+import MaskInput from 'react-native-mask-input';
 
 const TextInputWithFlag = ({
   inputRef,
@@ -57,7 +59,7 @@ const TextInputWithFlag = ({
 
         <View style={{borderLeftWidth: 0.5, height: 24, marginRight: 10}} />
         <MyText text={CountryCode} marginHorizontal={10} />
-        <TextInput
+        {/* <TextInput
           ref={inputRef}
           value={value}
           allowFontScaling={false}
@@ -68,8 +70,41 @@ const TextInputWithFlag = ({
           maxLength={maxLength}
           keyboardType={keyboardType}
           color={color}
-        />
-      </View>
+        /> */}
+       
+            <MaskInput
+            ref={inputRef}
+              value={value}
+              keyboardType={keyboardType}
+              placeholder={placeholder}
+              placeholderTextColor={placeholderTextColor}
+              style={{color: '#000', marginLeft: 15}}
+              onChangeText={(masked, unmasked) => {
+                onChangeText(masked); // you can use the unmasked value as well
+
+                // assuming you typed "9" all the way:
+                console.log(masked); // (99) 99999-9999
+                console.log(unmasked); // 99999999999
+              }}
+              mask={[
+                '(',
+                /\d/,
+                /\d/,
+                /\d/,
+                ')',
+                ' ',
+                /\d/,
+                /\d/,
+                /\d/,
+                '-',
+                /\d/,
+                /\d/,
+                /\d/,
+                /\d/,
+              ]}
+            />
+          </View>
+      
       {/* {validateLength() ? (
         <MyIcon.AntDesign
           name="checkcircleo"

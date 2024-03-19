@@ -1,5 +1,5 @@
 import {Colors} from 'global/Index';
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {height, width} from '../../global/Constant';
 
 export const styles = StyleSheet.create({
@@ -47,14 +47,17 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
   },
   pdfContainer: {
-    height: '100%',
+    height: '98%',
     width: '100%',
+     
   },
   crseImg: {
+    // flex:1,
     height: '100%',
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    
   },
   header: {
     flexDirection: 'row',
@@ -70,10 +73,10 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  container: {
-    flex: 1,
-    backgroundColor: Colors.BLACK + '66',
-  },
+  // container: {
+  //   flex: 1,
+  //   backgroundColor: Colors.BLACK + '66',
+  // },
   blurView: {
     flex: 1,
   },

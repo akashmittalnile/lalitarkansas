@@ -48,14 +48,21 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 10,
     marginBottom: 5,
+    gap:20
   },
   topLeftRow: {
+    // backgroundColor:'blue',
+    width:'75%',
     flexDirection: 'row',
     alignItems: 'center',
   },
   topRightRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    justifyContent:'space-around',
+    // backgroundColor:'red',
+    width:45,
+    left:-10
   },
   crtrImg: {
     height: responsiveHeight(5),
@@ -125,13 +132,14 @@ export const styles = StyleSheet.create({
   heartIcon: {
     position: 'absolute',
     right: 7,
-    right: 7,
+    top: 7,
+    height: 18, width: 18
   },
   starView: {
     flexDirection: 'row',
     alignItems: 'center',
     position: 'absolute',
-    paddingVertical: 4,
+    paddingVertical: 2,
     paddingHorizontal: 5,
     borderRadius: 15,
     right: 7,
@@ -148,7 +156,7 @@ export const styles = StyleSheet.create({
   },
   bottomView: {
     paddingHorizontal: 10,
-    paddingBottom: 13,
+    paddingBottom: 1,
     paddingTop: 11,
   },
   productButtonsRow: {

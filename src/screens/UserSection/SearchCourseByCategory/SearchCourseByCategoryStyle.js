@@ -47,6 +47,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 22,
+    
   },
   bottomRow: {
     flexDirection: 'row',
@@ -59,8 +60,9 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   createImgStyle: {
-    height: 13,
-    width: 13,
-    borderRadius: 13 / 2,
+    height: 14,
+    width: 14,
+    borderRadius: 14 / 2,
+    top:2
   },
 });

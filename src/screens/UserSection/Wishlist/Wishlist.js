@@ -129,8 +129,8 @@ const Wishlist = ({ navigation, dispatch }) => {
       // console.log('getAllType resp', resp?.data);
       if (resp?.data?.status) {
         if (type === '1') {
-          const updatedData = await generateThumb(resp?.data?.data);
-          setCourseData(updatedData);
+          // const updatedData = await generateThumb(resp?.data?.data);
+          setCourseData(resp?.data?.data);
         } else {
           setProductData(resp?.data?.data);
         }
@@ -163,29 +163,29 @@ const Wishlist = ({ navigation, dispatch }) => {
       setRefreshing(false);
     });
   }, []);
-  const generateThumb = async data => {
-    // console.log('generateThumb');
-    let updatedData = [];
-    try {
-      updatedData = await Promise.all(
-        data?.map?.(async el => {
-          // console.log('el.introduction_video trending', el.introduction_video);
-          const thumb = await createThumbnail({
-            url: el.introduction_video,
-            timeStamp: 1000,
-          });
-          return {
-            ...el,
-            thumb,
-          };
-        }),
-      );
-    } catch (error) {
-      console.error('Error generating thumbnails:', error);
-    }
-    // console.log('thumb data wishlist', updatedData);
-    return updatedData;
-  };
+  // const generateThumb = async data => {
+  //   // console.log('generateThumb');
+  //   let updatedData = [];
+  //   try {
+  //     updatedData = await Promise.all(
+  //       data?.map?.(async el => {
+  //         // console.log('el.introduction_video trending', el.introduction_video);
+  //         const thumb = await createThumbnail({
+  //           url: el.introduction_video,
+  //           timeStamp: 1000,
+  //         });
+  //         return {
+  //           ...el,
+  //           thumb,
+  //         };
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error('Error generating thumbnails:', error);
+  //   }
+  //   // console.log('thumb data wishlist', updatedData);
+  //   return updatedData;
+  // };
   const setOriginalValues = () => {
     setSelectedTab(temporarySelectedTab);
     setSelectedCourseCategries(tempSelectedCourseCategries);
@@ -267,8 +267,8 @@ const Wishlist = ({ navigation, dispatch }) => {
 
         setShowFilterModal(false);
         if (temporarySelectedTab === '1') {
-          const updatedData = await generateThumb(resp?.data?.data);
-          setCourseData(updatedData);
+          // const updatedData = await generateThumb(resp?.data?.data);
+          setCourseData(resp?.data?.data);
         } else {
           setProductData(resp?.data?.data);
         }
@@ -344,8 +344,8 @@ const Wishlist = ({ navigation, dispatch }) => {
       if (resp?.data?.status) {
         setShowFilterModal(false);
         if (selectedTab === '1') {
-          const updatedData = await generateThumb(resp?.data?.data);
-          setCourseData(updatedData);
+          // const updatedData = await generateThumb(resp?.data?.data);
+          setCourseData(resp?.data?.data);
         } else {
           setProductData(resp?.data?.data);
         }
@@ -445,8 +445,8 @@ const Wishlist = ({ navigation, dispatch }) => {
         }
         setShowFilterModal(false);
         if (temporarySelectedTab === '1') {
-          const updatedData = await generateThumb(resp?.data?.data);
-          setCourseData(updatedData);
+          // const updatedData = await generateThumb(resp?.data?.data);
+          setCourseData(resp?.data?.data);
         } else {
           setProductData(resp?.data?.data);
         }
@@ -698,7 +698,7 @@ const Wishlist = ({ navigation, dispatch }) => {
         style={styles.courseContainer}>
         <ImageBackground
           // source={item.courseImg}
-          source={{ uri: item?.thumb?.path }}
+          source={{ uri: item?.thumbnail }}
           style={styles.crseImg}
           imageStyle={{ borderRadius: 10 }}>
           <TouchableOpacity onPress={() => {
@@ -720,7 +720,9 @@ const Wishlist = ({ navigation, dispatch }) => {
           />
           <View style={styles.middleRow}>
             <View style={styles.ratingRow}>
-              <Image source={require('assets/images/star.png')} />
+            <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
               <MyText
                 text={item?.avg_rating}
                 fontFamily="regular"
@@ -760,7 +762,7 @@ const Wishlist = ({ navigation, dispatch }) => {
               style={{}}
             />
             <View style={styles.iconsRow}>
-              <TouchableOpacity
+              <TouchableOpacity  style={{ width: 18, height: 18 }}
                 onPress={() => {
                   onLike('1', item.id, '1');
                 }}>
@@ -770,13 +772,13 @@ const Wishlist = ({ navigation, dispatch }) => {
                       ? require('assets/images/heart-selected.png')
                       : require('assets/images/heart-yellow-outline.png')
                   }
-                  style={{ width: 14, height: 14 }}
+                  style={{ width: 18, height: 18 }}
                 />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => { shareItemHandler(1, item?.id); }}>
                 <Image
                   source={require('assets/images/share.png')}
-                  style={{ marginLeft: 10 }}
+                  style={{ marginLeft: 10 ,height:18,width:18 }}
                 />
               </TouchableOpacity>
             </View>
@@ -808,7 +810,9 @@ const Wishlist = ({ navigation, dispatch }) => {
           />
           <View style={styles.middleRow}>
             <View style={styles.ratingRow}>
-              <Image source={require('assets/images/star.png')} />
+            <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
               <MyText
                 text={item?.avg_rating}
                 fontFamily="regular"
@@ -848,7 +852,7 @@ const Wishlist = ({ navigation, dispatch }) => {
               style={{}}
             />
             <View style={styles.iconsRow}>
-              <TouchableOpacity
+              <TouchableOpacity  style={{ width: 18, height: 18 }}
                 onPress={() => {
                   onLike('2', item.id, '1');
                 }}>
@@ -858,13 +862,13 @@ const Wishlist = ({ navigation, dispatch }) => {
                       ? require('assets/images/heart-selected.png')
                       : require('assets/images/heart-yellow-outline.png')
                   }
-                  style={{ width: 14, height: 14 }}
+                  style={{ width: 18, height: 18 }}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => { shareItemHandler(1, item?.id); }}>
+              <TouchableOpacity onPress={() => { shareItemHandler(2, item?.id); }}>
                 <Image
                   source={require('assets/images/share.png')}
-                  style={{ marginLeft: 10 }}
+                  style={{ marginLeft: 10 ,height:18,width:18 }}
                 />
               </TouchableOpacity>
             </View>
@@ -880,6 +884,7 @@ const Wishlist = ({ navigation, dispatch }) => {
           <FlatList
             // data={courseList}
             data={courseData}
+            contentContainerStyle={{paddingBottom:'25%'}}
             style={{ marginTop: 28 }}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderCourse}
@@ -904,8 +909,8 @@ const Wishlist = ({ navigation, dispatch }) => {
       <View>
         {productData?.length > 0 ? (
           <FlatList
-            // data={productList}
             data={productData}
+            contentContainerStyle={{paddingBottom:'25%'}}
             style={{ marginTop: 28 }}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderProduct}

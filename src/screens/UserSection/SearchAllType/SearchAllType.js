@@ -149,8 +149,8 @@ const SearchAllType = ({ navigation, dispatch }) => {
               resp?.data?.category?.filter(el => el.type == '2'),
             );
           }
-          const updatedData = await generateThumb(resp?.data?.data);
-          setCourseData(updatedData);
+          // const updatedData = await generateThumb(resp?.data?.data);
+          setCourseData(resp?.data?.data);
         } else {
           setProductData(resp?.data?.data);
         }
@@ -162,29 +162,29 @@ const SearchAllType = ({ navigation, dispatch }) => {
     }
     setShowLoader(false);
   };
-  const generateThumb = async data => {
-    // console.log('generateThumb');
-    let updatedData = [];
-    try {
-      updatedData = await Promise.all(
-        data?.map?.(async el => {
-          // console.log('el.introduction_video trending', el.introduction_video);
-          const thumb = await createThumbnail({
-            url: el.introduction_video,
-            timeStamp: 1000,
-          });
-          return {
-            ...el,
-            thumb,
-          };
-        }),
-      );
-    } catch (error) {
-      console.error('Error generating thumbnails:', error);
-    }
-    // console.log('thumb data SearchAllType', updatedData);
-    return updatedData;
-  };
+  // const generateThumb = async data => {
+  //   // console.log('generateThumb');
+  //   let updatedData = [];
+  //   try {
+  //     updatedData = await Promise.all(
+  //       data?.map?.(async el => {
+  //         // console.log('el.introduction_video trending', el.introduction_video);
+  //         const thumb = await createThumbnail({
+  //           url: el.introduction_video,
+  //           timeStamp: 1000,
+  //         });
+  //         return {
+  //           ...el,
+  //           thumb,
+  //         };
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error('Error generating thumbnails:', error);
+  //   }
+  //   // console.log('thumb data SearchAllType', updatedData);
+  //   return updatedData;
+  // };
   const onLike = async (type, id, status) => {
     setShowLoader(true);
     const formdata = new FormData();
@@ -305,8 +305,8 @@ const SearchAllType = ({ navigation, dispatch }) => {
 
         setShowFilterModal(false);
         if (temporarySelectedTab === '1') {
-          const updatedData = await generateThumb(resp?.data?.data);
-          setCourseData(updatedData);
+          // const updatedData = await generateThumb(resp?.data?.data);
+          setCourseData(resp?.data?.data);
         } else {
           setProductData(resp?.data?.data);
         }
@@ -388,8 +388,8 @@ const SearchAllType = ({ navigation, dispatch }) => {
           if (resp?.data?.data?.length === 0) {
             setCourseData(resp?.data?.data);
           } else {
-            const updatedData = await generateThumb(resp?.data?.data);
-            setCourseData(updatedData);
+            // const updatedData = await generateThumb(resp?.data?.data);
+            setCourseData(resp?.data?.data);
           }
         } else {
           setProductData(resp?.data?.data);
@@ -495,9 +495,9 @@ const SearchAllType = ({ navigation, dispatch }) => {
         }
         setShowFilterModal(false);
         if (temporarySelectedTab === '1') {
-          const updatedData = await generateThumb(resp?.data?.data);
-          console.log('here');
-          setCourseData(updatedData);
+          // const updatedData = await generateThumb(resp?.data?.data);
+          // console.log('here');
+          setCourseData(resp?.data?.data);
         } else {
           setProductData(resp?.data?.data);
         }
@@ -529,7 +529,7 @@ const SearchAllType = ({ navigation, dispatch }) => {
         style={styles.courseContainer}>
         <ImageBackground
           // source={item.courseImg}
-          source={{ uri: item?.thumb?.path }}
+          source={{ uri: item?.thumbnail }}
           style={styles.crseImg}
           imageStyle={{ borderRadius: 10 }}>
           <TouchableOpacity
@@ -552,7 +552,9 @@ const SearchAllType = ({ navigation, dispatch }) => {
           />
           <View style={styles.middleRow}>
             <View style={styles.ratingRow}>
-              <Image source={require('assets/images/star.png')} />
+            <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
               <MyText
                 text={item?.avg_rating}
                 fontFamily="regular"
@@ -592,7 +594,7 @@ const SearchAllType = ({ navigation, dispatch }) => {
               style={{}}
             />
             <View style={styles.iconsRow}>
-              <TouchableOpacity
+              <TouchableOpacity style={{height:18,width:18}}
                 onPress={() => {
                   onLike('1', item.id, item?.isWishlist);
                 }}>
@@ -602,13 +604,13 @@ const SearchAllType = ({ navigation, dispatch }) => {
                       ? require('assets/images/heart-selected.png')
                       : require('assets/images/heart-yellow-outline.png')
                   }
-                  style={{ width: 14, height: 14 }}
+                  style={{ width: 18, height: 18 }}
                 />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => { shareHandler(item?.id); }}>
                 <Image
                   source={require('assets/images/share.png')}
-                  style={{ marginLeft: 10 }}
+                  style={{ marginLeft: 10,height:18,width:18 }}
                 />
               </TouchableOpacity>
             </View>
@@ -640,7 +642,9 @@ const SearchAllType = ({ navigation, dispatch }) => {
           />
           <View style={styles.middleRow}>
             <View style={styles.ratingRow}>
-              <Image source={require('assets/images/star.png')} />
+            <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
               <MyText
                 text={item?.avg_rating}
                 fontFamily="regular"

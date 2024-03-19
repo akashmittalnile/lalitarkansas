@@ -25,6 +25,7 @@ import {width} from '../../global/Constant';
 import moment from 'moment';
 import MyMultiSelect from '../../components/MyMultiSelect/MyMultiSelect';
 import DateSelector from '../../components/DateSelector/DateSelector';
+//import : third parties
 import Toast from 'react-native-toast-message';
 
 const sliderRadius = 3;

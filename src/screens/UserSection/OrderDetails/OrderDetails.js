@@ -89,7 +89,7 @@ const OrderDetails = ({ navigation, dispatch, route }) => {
       if (resp?.data?.status) {
         const isCourseExist = resp.data.items?.find(el => el.type == '1');
         if (isCourseExist) {
-          resp.data.items = await generateThumb(resp?.data?.items);
+          // resp.data.items = await generateThumb(resp?.data?.items);
           setOrderData(resp?.data);
         } else {
           setOrderData(resp?.data);
@@ -102,32 +102,32 @@ const OrderDetails = ({ navigation, dispatch, route }) => {
     }
     setShowLoader(false);
   };
-  const generateThumb = async data => {
-    console.log('generateThumb', JSON.stringify(data));
-    let updatedData = [...data];
-    try {
-      updatedData = await Promise.all(
-        data?.map?.(async el => {
-          if (el?.type == '2') {
-            return el;
-          }
-          // console.log('here', JSON.stringify(el));
-          const thumb = await createThumbnail({
-            url: el?.video,
-            timeStamp: 1000,
-          });
-          return {
-            ...el,
-            thumb,
-          };
-        }),
-      );
-    } catch (error) {
-      console.error('Error generating thumbnails:', error);
-    }
-    console.log('thumb data order details', updatedData);
-    return updatedData;
-  };
+  // const generateThumb = async data => {
+  //   console.log('generateThumb', JSON.stringify(data));
+  //   let updatedData = [...data];
+  //   try {
+  //     updatedData = await Promise.all(
+  //       data?.map?.(async el => {
+  //         if (el?.type == '2') {
+  //           return el;
+  //         }
+  //         // console.log('here', JSON.stringify(el));
+  //         const thumb = await createThumbnail({
+  //           url: el?.video,
+  //           timeStamp: 1000,
+  //         });
+  //         return {
+  //           ...el,
+  //           thumb,
+  //         };
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error('Error generating thumbnails:', error);
+  //   }
+  //   console.log('thumb data order details', updatedData);
+  //   return updatedData;
+  // };
 
 
   const requestDownloadingPermission = async () => {
@@ -239,7 +239,7 @@ const OrderDetails = ({ navigation, dispatch, route }) => {
         <View style={styles.courseSubContainer}>
           <ImageBackground
             source={
-              item?.type == '1' ? { uri: item?.thumb?.path } : { uri: item?.image }
+              item?.type == '1' ? { uri: item?.thumbnail } : { uri: item?.image }
             }
             style={styles.crseImg}></ImageBackground>
           <View style={{ marginLeft: 11, width: width * 0.5 }}>
@@ -252,7 +252,9 @@ const OrderDetails = ({ navigation, dispatch, route }) => {
             />
             <View style={styles.middleRow}>
               <View style={styles.ratingRow}>
-                <Image source={require('assets/images/star.png')} />
+              <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
                 <MyText
                   text={item?.avg_rating}
                   fontFamily="regular"
@@ -298,7 +300,7 @@ const OrderDetails = ({ navigation, dispatch, route }) => {
                 {/* <Image source={require('assets/images/heart-selected.png')} /> */}
                 <Image
                   source={require('assets/images/share.png')}
-                  style={{ marginLeft: 10 }}
+                  style={{ marginLeft: 10,height:16,width:16 }}
                 />
               </View>
               </TouchableOpacity>

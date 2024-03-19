@@ -24,6 +24,7 @@ import CustomLoader from 'components/CustomLoader/CustomLoader';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-toast-message';
 //import : global
+import { shareItemHandler } from '../../../global/globalMethod';
 import {Colors, Constant, MyIcon, ScreenNames, Service} from 'global/Index';
 //import : styles
 import {styles} from './SearchCourseByTagStyle';
@@ -37,8 +38,10 @@ import SearchWithIcon from '../../../components/SearchWithIcon/SearchWithIcon';
 import SearchCourseByTagFiltersModal from './components/SearchCourseByTagFiltersModal/SearchCourseByTagFiltersModal';
 import {createThumbnail} from 'react-native-create-thumbnail';
 import VideoModal from '../../../components/VideoModal/VideoModal';
+import defaultImg from '../../../assets/images/default-content-creator-image.png';
 
 const SearchCourseByTag = ({navigation, dispatch, route}) => {
+  const defaultImgPath = Image.resolveAssetSource(defaultImg).uri;
   //variables
   const LINE_HEIGTH = 25;
   //variables : redux
@@ -100,7 +103,7 @@ const SearchCourseByTag = ({navigation, dispatch, route}) => {
     const postData = new FormData();
     postData.append('type', 1);
     postData.append('tag', route?.params?.id);
-    console.log('getCourses postData', postData);
+    console.log('SearchcourseByTagDATA----', postData);
     !showLoader && setShowLoader(true);
     try {
       const resp = await Service.postApiWithToken(
@@ -115,8 +118,8 @@ const SearchCourseByTag = ({navigation, dispatch, route}) => {
             resp?.data?.category?.filter(el => el.type == '1'),
           );
         }
-        const updatedData = await generateThumb(resp?.data?.data);
-        setCourseData(updatedData);
+        // const updatedData = await generateThumb(resp?.data?.data);
+        setCourseData(resp?.data?.data);
       } else {
         Toast.show({text1: resp.data.message});
       }
@@ -125,29 +128,29 @@ const SearchCourseByTag = ({navigation, dispatch, route}) => {
     }
     setShowLoader(false);
   };
-  const generateThumb = async data => {
-    // console.log('generateThumb');
-    let updatedData = [];
-    try {
-      updatedData = await Promise.all(
-        data?.map?.(async el => {
-          // console.log('el.introduction_video trending', el.introduction_video);
-          const thumb = await createThumbnail({
-            url: el.introduction_video,
-            timeStamp: 1000,
-          });
-          return {
-            ...el,
-            thumb,
-          };
-        }),
-      );
-    } catch (error) {
-      console.error('Error generating thumbnails:', error);
-    }
-    // console.log('thumb data SearchAllType', updatedData);
-    return updatedData;
-  };
+  // const generateThumb = async data => {
+  //   // console.log('generateThumb');
+  //   let updatedData = [];
+  //   try {
+  //     updatedData = await Promise.all(
+  //       data?.map?.(async el => {
+  //         // console.log('el.introduction_video trending', el.introduction_video);
+  //         const thumb = await createThumbnail({
+  //           url: el.introduction_video,
+  //           timeStamp: 1000,
+  //         });
+  //         return {
+  //           ...el,
+  //           thumb,
+  //         };
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error('Error generating thumbnails:', error);
+  //   }
+  //   // console.log('thumb data SearchAllType', updatedData);
+  //   return updatedData;
+  // };
   const gotoCourseDetails = (id, type) => {
     navigation.navigate(ScreenNames.COURSE_DETAILS, {id, type});
   };
@@ -377,8 +380,8 @@ const SearchCourseByTag = ({navigation, dispatch, route}) => {
       console.log('applyFilters resp', resp?.data);
       if (resp?.data?.status) {
         setShowFilterModal(false);
-        const updatedData = await generateThumb(resp?.data?.data);
-        setCourseData(updatedData);
+        // const updatedData = await generateThumb(resp?.data?.data);
+        setCourseData(resp?.data?.data);
       } else {
         Toast.show({ text1: resp.data.message });
       }
@@ -511,8 +514,8 @@ const SearchCourseByTag = ({navigation, dispatch, route}) => {
       console.log('applyFilters resp', resp?.data);
       if (resp?.data?.status) {
         setShowFilterModal(false);
-        const updatedData = await generateThumb(resp?.data?.data);
-        setCourseData(updatedData);
+        // const updatedData = await generateThumb(resp?.data?.data);
+        setCourseData(resp?.data?.data);
       } else {
         Toast.show({text1: resp.data.message});
       }
@@ -570,8 +573,8 @@ const SearchCourseByTag = ({navigation, dispatch, route}) => {
       console.log('removeFilter resp', resp?.data);
       if (resp?.data?.status) {
         setShowFilterModal(false);
-        const updatedData = await generateThumb(resp?.data?.data);
-        setCourseData(updatedData);
+        // const updatedData = await generateThumb(resp?.data?.data);
+        setCourseData(resp?.data?.data);
       } else {
         Toast.show({text1: resp.data.message});
       }
@@ -616,7 +619,7 @@ const SearchCourseByTag = ({navigation, dispatch, route}) => {
         onPress={() => gotoCourseDetails(item?.id, '1')}
         style={styles.courseContainer}>
         <ImageBackground
-          source={{uri: item?.thumb?.path}}
+          source={{uri: item?.thumbnail}}
           style={styles.crseImg}
           imageStyle={{borderRadius: 10}}>
           <TouchableOpacity
@@ -639,7 +642,9 @@ const SearchCourseByTag = ({navigation, dispatch, route}) => {
           />
           <View style={styles.middleRow}>
             <View style={styles.ratingRow}>
-              <Image source={require('assets/images/star.png')} />
+            <View style={{height:10,width:10,justifyContent:'center',alignItems:'center'}}>
+          <Image resizeMode='contain' source={require('assets/images/star.png')} style={{height:12,minWidth:12}} />
+           </View>
               <MyText
                 text={item?.avg_rating}
                 fontFamily="regular"
@@ -655,7 +660,7 @@ const SearchCourseByTag = ({navigation, dispatch, route}) => {
                 // style={styles.crtrImg}
               /> */}
               <Image
-                source={{uri: item?.content_creator_image}}
+                source={{uri: item?.content_creator_image != ''  ? item?.content_creator_image : defaultImgPath }}
                 style={styles.createImgStyle}
               />
               <MyText
@@ -678,7 +683,7 @@ const SearchCourseByTag = ({navigation, dispatch, route}) => {
               style={{}}
             />
             <View style={styles.iconsRow}>
-              <TouchableOpacity
+              <TouchableOpacity  style={{height: 18, width: 18}}
                 onPress={() => {
                   onLike('1', item.id, item?.isWishlist);
                 }}>
@@ -688,12 +693,15 @@ const SearchCourseByTag = ({navigation, dispatch, route}) => {
                       ? require('assets/images/heart-selected.png')
                       : require('assets/images/heart.png')
                   }
+                  style={{height: 18, width: 18}}
                 />
               </TouchableOpacity>
-              <Image
-                source={require('assets/images/share.png')}
-                style={{marginLeft: 10}}
-              />
+              <TouchableOpacity onPress={() => {  shareItemHandler('1', item?.id); }}>
+                <Image
+                  source={require('assets/images/share.png')}
+                  style={{ marginLeft: 10,height: 18, width: 18 }}
+                />
+              </TouchableOpacity>
             </View>
           </View>
         </View>
